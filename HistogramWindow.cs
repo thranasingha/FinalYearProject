@@ -319,6 +319,7 @@ namespace IPLab
 
             // get statistics
             stat = ( image == null ) ? null : new ImageStatistics( image );
+            
 
             // free
             Cursor = Cursors.Arrow;
@@ -388,6 +389,7 @@ namespace IPLab
 
             if ( activeHistogram != null )
             {
+                activeHistogram.Values[0] = activeHistogram.Values[1];
                 histogram.Values = activeHistogram.Values;
 
                 meanLabel.Text = activeHistogram.Mean.ToString( "F2" );

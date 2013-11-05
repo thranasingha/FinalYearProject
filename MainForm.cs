@@ -22,6 +22,14 @@ namespace IPLab
 		private static string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "app.config");
 		private static string dockManagerConfigFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockManager.config");
 
+
+        public Rectangle _selection1;
+        public Rectangle _selection2;
+        public Rectangle _selection3;
+
+        public bool _selecting { get; set; }
+        public bool _selectingEnabled = true;
+
 		private int unnamedNumber = 0;
 		private Configuration config = new Configuration();
 		private HistogramWindow histogramWin = new HistogramWindow();
@@ -1378,40 +1386,107 @@ namespace IPLab
 		}
 
 		// Print document page
-		private void printDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
-		{
-			Content	doc = dockManager.ActiveDocument;
+        private void printDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            Content doc = dockManager.ActiveDocument;
 
-			if (doc != null)
-			{
-				Bitmap image = null;
+            if (doc != null)
+            {
+                Bitmap image = null;
 
-				// get an image to print
-				if (doc is ImageDoc)
-				{
-					image = ((ImageDoc) doc).Image;
-				}
-				else if (doc is FourierDoc)
-				{
-					image = ((FourierDoc) doc).Image;
-				}
+                // get an image to print
+                if (doc is ImageDoc)
+                {
+                    image = ((ImageDoc)doc).Image;
+                }
+                else if (doc is FourierDoc)
+                {
+                    image = ((FourierDoc)doc).Image;
+                }
 
-				System.Diagnostics.Debug.WriteLine("X: " + e.MarginBounds.Left + ", Y = " + e.MarginBounds.Top + ", width = " + e.MarginBounds.Width + ", height = " + e.MarginBounds.Height);
-				System.Diagnostics.Debug.WriteLine("X: " + e.PageBounds.Left + ", Y = " + e.PageBounds.Top + ", width = " + e.PageBounds.Width + ", height = " + e.PageBounds.Height);
+                System.Diagnostics.Debug.WriteLine("X: " + e.MarginBounds.Left + ", Y = " + e.MarginBounds.Top + ", width = " + e.MarginBounds.Width + ", height = " + e.MarginBounds.Height);
+                System.Diagnostics.Debug.WriteLine("X: " + e.PageBounds.Left + ", Y = " + e.PageBounds.Top + ", width = " + e.PageBounds.Width + ", height = " + e.PageBounds.Height);
 
-				int		width = image.Width;
-				int		height = image.Height;
+                int width = image.Width;
+                int height = image.Height;
 
-				if ((width > e.MarginBounds.Width) || (height > e.MarginBounds.Height))
-				{
-					float f = Math.Min((float) e.MarginBounds.Width / width, (float) e.MarginBounds.Height / height);
+                if ((width > e.MarginBounds.Width) || (height > e.MarginBounds.Height))
+                {
+                    float f = Math.Min((float)e.MarginBounds.Width / width, (float)e.MarginBounds.Height / height);
 
-					width = (int)(f * width);
-					height = (int)(f * height);
-				}
+                    width = (int)(f * width);
+                    height = (int)(f * height);
+                }
 
-				e.Graphics.DrawImage(image, e.MarginBounds.Left, e.MarginBounds.Top, width, height);
-			}
-		}
+                e.Graphics.DrawImage(image, e.MarginBounds.Left, e.MarginBounds.Top, width, height);
+            }
+        }
+
+        /// <summary>
+        /// Handles the MouseDown event of the pictureBox1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Starting point of the selection:
+            if (e.Button == MouseButtons.Left && _selectingEnabled)
+            {
+                _selecting = true;
+                _selection1 = new Rectangle(new Point(e.X, e.Y), new Size());
+            }
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the pictureBox1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Update the actual size of the selection:
+            if (_selecting && _selectingEnabled)
+            {
+                _selection1.Width = e.X - _selection1.X;
+                _selection1.Height = e.Y - _selection1.Y;
+
+                // Redraw the picturebox:
+                document_DocumentChanged(this, null);
+            }
+        }
+
+        /// <summary>
+        /// Handles the MouseUp event of the pictureBox1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && _selecting && _selectingEnabled)
+            {
+                // Create cropped image:
+                if (_selection1.Height != 0 && _selection1.Width != 0)
+                {
+                    _selection3 = _selection1;
+                    _selection2 = _selection1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles the Paint event of the pictureBox1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            if (_selecting && _selectingEnabled)
+            {
+                // Draw a rectangle displaying the current selection
+                Pen pen = Pens.GreenYellow;
+                e.Graphics.DrawRectangle(pen, _selection1);
+            }
+        }
+		
 	}
 }

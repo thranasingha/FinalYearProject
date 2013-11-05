@@ -30,9 +30,13 @@ namespace IPLab
         private float zoom = 1;
         private IDocumentsHost host = null;
 
+
         private bool cropping = false;
         private bool dragging = false;
+
         private Point start, end, startW, endW;
+
+        #region form items
 
         private System.Windows.Forms.MainMenu mainMenu;
         private System.Windows.Forms.MenuItem imageItem;
@@ -74,6 +78,8 @@ namespace IPLab
         private MenuItem thresholdingSegment;
         private MenuItem edgeSegment;
         private System.ComponentModel.IContainer components;
+
+        #endregion
 
         // Image property
         public Bitmap Image
@@ -1612,6 +1618,8 @@ namespace IPLab
             }
         }
 
+        #region Tharindu Edit
+
         /// <summary>
         /// Handles the Click event of the thresholdingSegment control.
         /// </summary>
@@ -1700,6 +1708,7 @@ namespace IPLab
                     }
                 }
             }
+            image.Dispose();
             image = newmap;
         }
 
@@ -1711,8 +1720,183 @@ namespace IPLab
         /// <remarks></remarks>
         private void edgeSegment_Click(object sender, EventArgs e)
         {
-                       
-        }        
+            //ApplyFilter (new HomogenityEdgeDetector());    
+
+            Bitmap map = AForge.Imaging.Image.Clone(image);
+
+            // apply filter to the image
+            Bitmap newImage = new HomogenityEdgeDetector().Apply(map);
+
+            if (host.CreateNewDocumentOnChange)
+            {
+                // open new image in new document
+                host.NewDocument(newImage);
+            }
+            else
+            {
+                if (host.RememberOnChange)
+                {
+                    // backup current image
+                    if (backup != null)
+                        backup.Dispose();
+
+                    backup = image;
+                }
+                else
+                {
+                    // release current image
+                    image.Dispose();
+                }
+
+                //Create the image
+                //image = newImage;
+                Bitmap edgeImage = getItemsWithinEdges(newImage, map, 50, false);
+
+                createCroppedImage(map, newImage);
+
+                // update
+                UpdateNewImage();
+            }
+        }
+
+        /// <summary>
+        /// Gets the items within edges.
+        /// </summary>
+        /// <param name="image">The image.</param>
+        /// <param name="threshold">The threshold.</param>
+        /// <param name="getLargestBlobe">if set to <c>true</c> [get largest blobe].</param>
+        /// <returns></returns>
+        private static Bitmap getItemsWithinEdges(Bitmap edgeImage, Bitmap originalImage, int threshold, bool getLargestBlobe)
+        {
+            if (originalImage != null)
+            {
+                try
+                {
+                    Bitmap edges = new Bitmap(originalImage.Width, originalImage.Height);
+                    Bitmap retVal = new Bitmap(originalImage.Width, originalImage.Height);
+                    Color white = Color.White;
+                    Color black = Color.Black;
+
+
+                    for (int i = 0; i < originalImage.Height; i++)
+                    {
+                        for (int j = 1; j < originalImage.Width; j++)
+                        {
+                            Color temp = edgeImage.GetPixel(j, i);
+                            if (temp.R == 0 && temp.G == 0 && temp.B == 0)
+                            {
+                                edges.SetPixel(j, i, black);
+                            }
+                            else
+                            {
+                                edges.SetPixel(j, i, white);
+                                getConnectedItems(originalImage, edges, j, i, threshold);
+                            }
+
+                            //to get more smooth image
+                            if (j + 1 < originalImage.Width && edges.GetPixel(j + 1, i).ToArgb() == white.ToArgb())
+                            {
+                                getConnectedItems(originalImage, edges, j + 1, i, threshold);
+                            }
+                            if (j - 1 > 0 && edges.GetPixel(j - 1, i).ToArgb() == white.ToArgb())
+                            {
+                                getConnectedItems(originalImage, edges, j - 1, i, threshold);
+                            }
+                            if (i + 1 < originalImage.Height && edges.GetPixel(j, i + 1).ToArgb() == white.ToArgb())
+                            {
+                                getConnectedItems(originalImage, edges, j, i + 1, threshold);
+                            }
+                            if (i - 1 >= 0 && edges.GetPixel(j, i - 1).ToArgb() == white.ToArgb())
+                            {
+                                getConnectedItems(originalImage, edges, j, i - 1, threshold);
+                            }
+                        }
+                    }
+
+                    (new AdaptiveSmooth()).Apply(edges);// smooth image inplace
+
+                    for (int i = 0; i < originalImage.Height; i++)
+                    {
+                        for (int j = 1; j < originalImage.Width; j++)
+                        {
+                            if (edges.GetPixel(j, i).ToArgb() != black.ToArgb())
+                            {
+                                retVal.SetPixel(j, i, originalImage.GetPixel(j, i));
+                            }
+                        }
+                    }
+
+                    return retVal;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Gets the connected items.
+        /// </summary>
+        /// <param name="image">The image.</param>
+        /// <param name="edges">The edges.</param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="threshold">The threshold.</param>
+        private static void getConnectedItems(Bitmap image, Bitmap edges, int x, int y, int threshold)
+        {
+            if (x < image.Width && y < image.Height)
+            {
+                Color white = Color.White;
+                //x+1,y
+                if ((image.Width > x + 1) && (image.GetPixel(x + 1, y).ToArgb() - image.GetPixel(x, y).ToArgb() < threshold))
+                {
+                    edges.SetPixel(x + 1, y, white);
+                }
+                //x+1,y+1
+                if ((image.Width > x + 1 && image.Height > y + 1) && (image.GetPixel(x + 1, y + 1).ToArgb() - image.GetPixel(x, y).ToArgb() < threshold))
+                {
+                    edges.SetPixel(x + 1, y + 1, white);
+                }
+                //x+1,y-1
+                if ((image.Width > x + 1 && y - 1 >= 0) && (image.GetPixel(x + 1, y - 1).ToArgb() - image.GetPixel(x, y).ToArgb() < threshold))
+                {
+                    edges.SetPixel(x + 1, y - 1, white);
+                }
+                //x-1,y
+                if ((x - 1 >= 0 && x - 1 < image.Width) && (image.GetPixel(x - 1, y).ToArgb() - image.GetPixel(x, y).ToArgb() < threshold))
+                {
+                    edges.SetPixel(x - 1, y, white);
+                }
+                //x-1,y+1
+                if ((x - 1 >= 0 && image.Height > y + 1) && (image.GetPixel(x - 1, y + 1).ToArgb() - image.GetPixel(x, y).ToArgb() < threshold))
+                {
+                    edges.SetPixel(x - 1, y + 1, white);
+                }
+                //x-1,y-1
+                if ((x - 1 >= 0 && y - 1 >= 0) && (image.GetPixel(x - 1, y - 1).ToArgb() - image.GetPixel(x, y).ToArgb() < threshold))
+                {
+                    edges.SetPixel(x - 1, y - 1, white);
+                }
+                //x,y+1
+                if ((image.Height > y + 1) && (image.GetPixel(x, y + 1).ToArgb() - image.GetPixel(x, y).ToArgb() < threshold))
+                {
+                    edges.SetPixel(x, y + 1, white);
+                }
+                //x,y-1
+                if ((y - 1 >= 0) && (image.GetPixel(x, y - 1).ToArgb() - image.GetPixel(x, y).ToArgb() < threshold))
+                {
+                    edges.SetPixel(x, y - 1, white);
+                }
+            }
+        }
+
+        
+        #endregion
+        
     }
 
     // Selection arguments
