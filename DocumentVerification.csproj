@@ -181,6 +181,12 @@
     <Compile Include="Tools\Serialize2DimArray.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Variation in Line Depth.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Variation in Line Depth.Designer.cs">
+      <DependentUpon>Variation in Line Depth.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Controls\ColorSlider.resx">
       <DependentUpon>ColorSlider.cs</DependentUpon>
     </EmbeddedResource>
@@ -230,6 +236,9 @@
       <DependentUpon>SelectImageForm.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="App.ico" />
+    <EmbeddedResource Include="Variation in Line Depth.resx">
+      <DependentUpon>Variation in Line Depth.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Copyright.txt" />
     <None Include="History.txt" />

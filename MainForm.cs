@@ -88,6 +88,7 @@ namespace IPLab
 		private System.Windows.Forms.PageSetupDialog pageSetupDialog;
 		private System.Windows.Forms.PrintDialog printDialog;
         private System.Windows.Forms.StatusBarPanel ycbcrPanel;
+        private MenuItem menuItem1;
 		private System.ComponentModel.IContainer components;
 
 		public MainForm()
@@ -198,6 +199,7 @@ namespace IPLab
             this.printPreviewDialog = new System.Windows.Forms.PrintPreviewDialog();
             this.pageSetupDialog = new System.Windows.Forms.PageSetupDialog();
             this.printDialog = new System.Windows.Forms.PrintDialog();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.zoomPanel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sizePanel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.selectionPanel)).BeginInit();
@@ -226,7 +228,8 @@ namespace IPLab
             this.closeFileItem,
             this.closeAllFileItem,
             this.menuItem8,
-            this.exitFileItem});
+            this.exitFileItem,
+            this.menuItem1});
             this.fileItem.Text = "&File";
             this.fileItem.Popup += new System.EventHandler(this.fileItem_Popup);
             // 
@@ -579,8 +582,8 @@ namespace IPLab
             // ofd
             // 
             this.ofd.Filter = "Image files (*.jpg,*.png,*.tif,*.bmp,*.gif)|*.jpg;*.png;*.tif;*.bmp;*.gif|JPG fil" +
-                "es (*.jpg)|*.jpg|PNG files (*.png)|*.png|TIF files (*.tif)|*.tif|BMP files (*.bm" +
-                "p)|*.bmp|GIF files (*.gif)|*.gif";
+    "es (*.jpg)|*.jpg|PNG files (*.png)|*.png|TIF files (*.tif)|*.tif|BMP files (*.bm" +
+    "p)|*.bmp|GIF files (*.gif)|*.gif";
             this.ofd.Title = "Open image";
             // 
             // sfd
@@ -601,6 +604,12 @@ namespace IPLab
             this.printPreviewDialog.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog.Icon")));
             this.printPreviewDialog.Name = "printPreviewDialog";
             this.printPreviewDialog.Visible = false;
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 8;
+            this.menuItem1.Text = "Line";
+            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
             // 
             // MainForm
             // 
@@ -1486,6 +1495,11 @@ namespace IPLab
                 Pen pen = Pens.GreenYellow;
                 e.Graphics.DrawRectangle(pen, _selection1);
             }
+        }
+
+        private void menuItem1_Click(object sender, EventArgs e)
+        {
+
         }
 		
 	}

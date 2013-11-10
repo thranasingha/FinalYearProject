@@ -34,7 +34,10 @@ namespace IPLab
         private bool cropping = false;
         private bool dragging = false;
 
+        private bool drawingLine = false;
+
         private Point start, end, startW, endW;
+        private Point imageStart, imageEnd;
 
         #region form items
 
@@ -80,6 +83,8 @@ namespace IPLab
         private System.ComponentModel.IContainer components;
 
         #endregion
+        private MenuItem menuItem1;
+        private MenuItem menuItem2;
 
         // Image property
         public Bitmap Image
@@ -110,7 +115,7 @@ namespace IPLab
 
 
         // Events
-        public delegate void SelectionEventHandler( object sender, SelectionEventArgs e );
+        public delegate void SelectionEventHandler(object sender, SelectionEventArgs e);
 
         public event EventHandler DocumentChanged;
         public event EventHandler ZoomChanged;
@@ -123,58 +128,58 @@ namespace IPLab
 
 
         // Constructors
-        private ImageDoc( IDocumentsHost host )
+        private ImageDoc(IDocumentsHost host)
         {
             this.host = host;
         }
         // Construct from file
-        public ImageDoc( string fileName, IDocumentsHost host )
-            : this( host )
+        public ImageDoc(string fileName, IDocumentsHost host)
+            : this(host)
         {
             try
             {
                 // load image
-                image = (Bitmap) Bitmap.FromFile( fileName );
+                image = (Bitmap)Bitmap.FromFile(fileName);
 
                 // format image
-                AForge.Imaging.Image.FormatImage( ref image );
+                AForge.Imaging.Image.FormatImage(ref image);
 
                 this.fileName = fileName;
             }
-            catch ( Exception )
+            catch (Exception)
             {
-                throw new ApplicationException( "Failed loading image" );
+                throw new ApplicationException("Failed loading image");
             }
 
-            Init( );
+            Init();
         }
         // Construct from image
-        public ImageDoc( Bitmap image, IDocumentsHost host )
-            : this( host )
+        public ImageDoc(Bitmap image, IDocumentsHost host)
+            : this(host)
         {
             this.image = image;
-            AForge.Imaging.Image.FormatImage( ref this.image );
+            AForge.Imaging.Image.FormatImage(ref this.image);
 
-            Init( );
+            Init();
         }
 
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        protected override void Dispose( bool disposing )
+        protected override void Dispose(bool disposing)
         {
-            if ( disposing )
+            if (disposing)
             {
-                if ( components != null )
+                if (components != null)
                 {
-                    components.Dispose( );
+                    components.Dispose();
                 }
-                if ( image != null )
+                if (image != null)
                 {
-                    image.Dispose( );
+                    image.Dispose();
                 }
             }
-            base.Dispose( disposing );
+            base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
@@ -182,7 +187,7 @@ namespace IPLab
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent( )
+        private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
@@ -224,6 +229,8 @@ namespace IPLab
             this.FilterItem = new System.Windows.Forms.MenuItem();
             this.thresholdingSegment = new System.Windows.Forms.MenuItem();
             this.edgeSegment = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -231,7 +238,8 @@ namespace IPLab
             this.mainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.imageItem,
             this.filtersItem,
-            this.FilterItem});
+            this.FilterItem,
+            this.menuItem1});
             // 
             // imageItem
             // 
@@ -499,6 +507,19 @@ namespace IPLab
             this.edgeSegment.Text = "By Edges";
             this.edgeSegment.Click += new System.EventHandler(this.edgeSegment_Click);
             // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 3;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem2});
+            this.menuItem1.Text = "Edit";
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 0;
+            this.menuItem2.Text = "Draw Line";
+            this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+            // 
             // ImageDoc
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
@@ -511,18 +532,19 @@ namespace IPLab
             this.MouseLeave += new System.EventHandler(this.ImageDoc_MouseLeave);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageDoc_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ImageDoc_MouseUp);
-            this.ResumeLayout(false);  
+            this.ResumeLayout(false);
+
         }
         #endregion
 
         // Init the document
-        private void Init( )
+        private void Init()
         {
             // init components
-            InitializeComponent( );
+            InitializeComponent();
 
             // form style
-            SetStyle( ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true );
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
 
             // init scroll bars
             this.AutoScroll = true;
@@ -532,155 +554,155 @@ namespace IPLab
             bw.WorkerSupportsCancellation = true;
             bw.WorkerReportsProgress = true;
 
-            UpdateSize( );
+            UpdateSize();
         }
 
         // Execute command
-        public void ExecuteCommand( ImageDocCommands cmd )
+        public void ExecuteCommand(ImageDocCommands cmd)
         {
-            switch ( cmd )
+            switch (cmd)
             {
                 case ImageDocCommands.Clone:		// clone the image
-                    Clone( );
+                    Clone();
                     break;
                 case ImageDocCommands.Crop:			// crop the image
-                    Crop( );
+                    Crop();
                     break;
                 case ImageDocCommands.ZoomIn:		// zoom in
-                    ZoomIn( );
+                    ZoomIn();
                     break;
                 case ImageDocCommands.ZoomOut:		// zoom out
-                    ZoomOut( );
+                    ZoomOut();
                     break;
                 case ImageDocCommands.ZoomOriginal:	// original size
                     zoom = 1;
-                    UpdateZoom( );
+                    UpdateZoom();
                     break;
                 case ImageDocCommands.FitToSize:	// fit to screen
-                    FitToScreen( );
+                    FitToScreen();
                     break;
                 case ImageDocCommands.Grayscale:	// grayscale
-                    Grayscale( );
+                    Grayscale();
                     break;
                 case ImageDocCommands.Threshold:	// threshold
-                    Threshold( );
+                    Threshold();
                     break;
                 case ImageDocCommands.Resize:		// resize the image
-                    ResizeImage( );
+                    ResizeImage();
                     break;
                 case ImageDocCommands.Rotate:		// rotate the image
-                    RotateImage( );
+                    RotateImage();
                     break;
 
                 case ImageDocCommands.Fourier:		// fourier transformation
-                    ForwardFourierTransformation( );
+                    ForwardFourierTransformation();
                     break;
             }
         }
 
         // Update document and notify client about changes
-        private void UpdateNewImage( )
+        private void UpdateNewImage()
         {
             // update size
-            UpdateSize( );
+            UpdateSize();
             // repaint
-            Invalidate( );
+            Invalidate();
 
             // notify host
-            if ( DocumentChanged != null )
-                DocumentChanged( this, null );
+            if (DocumentChanged != null)
+                DocumentChanged(this, null);
         }
 
         // Reload image from file
-        public void Reload( )
+        public void Reload()
         {
-            if ( fileName != null )
+            if (fileName != null)
             {
                 try
                 {
                     // load image
-                    Bitmap newImage = (Bitmap) Bitmap.FromFile( fileName );
+                    Bitmap newImage = (Bitmap)Bitmap.FromFile(fileName);
 
                     // Release current image
-                    image.Dispose( );
+                    image.Dispose();
                     // set document image to just loaded
                     image = newImage;
 
                     // format image
-                    AForge.Imaging.Image.FormatImage( ref image );
+                    AForge.Imaging.Image.FormatImage(ref image);
                 }
-                catch ( Exception )
+                catch (Exception)
                 {
-                    throw new ApplicationException( "Failed reloading image" );
+                    throw new ApplicationException("Failed reloading image");
                 }
 
                 // update
-                UpdateNewImage( );
+                UpdateNewImage();
             }
         }
 
         // Center image in the document
-        public void Center( )
+        public void Center()
         {
             Rectangle rc = ClientRectangle;
             Point p = this.AutoScrollPosition;
-            int width = (int) ( this.width * zoom );
-            int height = (int) ( this.height * zoom );
+            int width = (int)(this.width * zoom);
+            int height = (int)(this.height * zoom);
 
-            if ( rc.Width < width )
-                p.X = ( width - rc.Width ) >> 1;
-            if ( rc.Height < height )
-                p.Y = ( height - rc.Height ) >> 1;
+            if (rc.Width < width)
+                p.X = (width - rc.Width) >> 1;
+            if (rc.Height < height)
+                p.Y = (height - rc.Height) >> 1;
 
             this.AutoScrollPosition = p;
         }
 
         // Update document size 
-        private void UpdateSize( )
+        private void UpdateSize()
         {
             // image dimension
             width = image.Width;
             height = image.Height;
 
             // scroll bar size
-            this.AutoScrollMinSize = new Size( (int) ( width * zoom ), (int) ( height * zoom ) );
+            this.AutoScrollMinSize = new Size((int)(width * zoom), (int)(height * zoom));
         }
 
         // Paint image
-        protected override void OnPaint( PaintEventArgs e )
+        protected override void OnPaint(PaintEventArgs e)
         {
-            if ( image != null )
+            if (image != null)
             {
                 Graphics g = e.Graphics;
                 Rectangle rc = ClientRectangle;
-                Pen pen = new Pen( Color.FromArgb( 0, 0, 0 ) );
+                Pen pen = new Pen(Color.FromArgb(0, 0, 0));
 
-                int width = (int) ( this.width * zoom );
-                int height = (int) ( this.height * zoom );
-                int x = ( rc.Width < width ) ? this.AutoScrollPosition.X : ( rc.Width - width ) / 2;
-                int y = ( rc.Height < height ) ? this.AutoScrollPosition.Y : ( rc.Height - height ) / 2;
+                int width = (int)(this.width * zoom);
+                int height = (int)(this.height * zoom);
+                int x = (rc.Width < width) ? this.AutoScrollPosition.X : (rc.Width - width) / 2;
+                int y = (rc.Height < height) ? this.AutoScrollPosition.Y : (rc.Height - height) / 2;
 
                 // draw rectangle around the image
-                g.DrawRectangle( pen, x - 1, y - 1, width + 1, height + 1 );
+                g.DrawRectangle(pen, x - 1, y - 1, width + 1, height + 1);
 
                 // set nearest neighbor interpolation to avoid image smoothing
                 g.InterpolationMode = InterpolationMode.NearestNeighbor;
 
                 // draw image
-                g.DrawImage( image, x, y, width, height );
+                g.DrawImage(image, x, y, width, height);
 
-                pen.Dispose( );
+                pen.Dispose();
             }
         }
 
         // Mouse click
-        protected override void OnClick( EventArgs e )
+        protected override void OnClick(EventArgs e)
         {
-            Focus( );
+            Focus();
         }
 
         // Apply filter on the image
-        private void ApplyFilter( IFilter filter )
+        private void ApplyFilter(IFilter filter)
         {
             try
             {
@@ -688,38 +710,38 @@ namespace IPLab
                 this.Cursor = Cursors.WaitCursor;
 
                 // apply filter to the image
-                Bitmap newImage = filter.Apply( image );
+                Bitmap newImage = filter.Apply(image);
 
-                if ( host.CreateNewDocumentOnChange )
+                if (host.CreateNewDocumentOnChange)
                 {
                     // open new image in new document
-                    host.NewDocument( newImage );
+                    host.NewDocument(newImage);
                 }
                 else
                 {
-                    if ( host.RememberOnChange )
+                    if (host.RememberOnChange)
                     {
                         // backup current image
-                        if ( backup != null )
-                            backup.Dispose( );
+                        if (backup != null)
+                            backup.Dispose();
 
                         backup = image;
                     }
                     else
                     {
                         // release current image
-                        image.Dispose( );
+                        image.Dispose();
                     }
 
                     image = newImage;
 
                     // update
-                    UpdateNewImage( );
+                    UpdateNewImage();
                 }
             }
-            catch ( ArgumentException )
+            catch (ArgumentException)
             {
-                MessageBox.Show( "Selected filter can not be applied to the image", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error );
+                MessageBox.Show("Selected filter can not be applied to the image", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -729,229 +751,229 @@ namespace IPLab
         }
 
         // on "Image" item popup
-        private void imageItem_Popup( object sender, System.EventArgs e )
+        private void imageItem_Popup(object sender, System.EventArgs e)
         {
-            this.backImageItem.Enabled = ( backup != null );
+            this.backImageItem.Enabled = (backup != null);
             this.cropImageItem.Checked = cropping;
         }
 
         // Restore image to previous
-        private void backImageItem_Click( object sender, System.EventArgs e )
+        private void backImageItem_Click(object sender, System.EventArgs e)
         {
-            if ( backup != null )
+            if (backup != null)
             {
                 // release current image
-                image.Dispose( );
+                image.Dispose();
                 // restore
                 image = backup;
                 backup = null;
 
                 // update
-                UpdateNewImage( );
+                UpdateNewImage();
             }
         }
 
         // Clone the image
-        private void Clone( )
+        private void Clone()
         {
-            if ( host != null )
+            if (host != null)
             {
-                Bitmap clone = AForge.Imaging.Image.Clone( image );
+                Bitmap clone = AForge.Imaging.Image.Clone(image);
 
-                if ( !host.NewDocument( clone ) )
+                if (!host.NewDocument(clone))
                 {
-                    clone.Dispose( );
+                    clone.Dispose();
                 }
             }
         }
 
         // On "Image->Clone" item click
-        private void cloneImageItem_Click( object sender, System.EventArgs e )
+        private void cloneImageItem_Click(object sender, System.EventArgs e)
         {
-            Clone( );
+            Clone();
         }
 
         // Update zoom factor
-        private void UpdateZoom( )
+        private void UpdateZoom()
         {
-            this.AutoScrollMinSize = new Size( (int) ( width * zoom ), (int) ( height * zoom ) );
-            this.Invalidate( );
+            this.AutoScrollMinSize = new Size((int)(width * zoom), (int)(height * zoom));
+            this.Invalidate();
 
             // notify host
-            if ( ZoomChanged != null )
-                ZoomChanged( this, null );
+            if (ZoomChanged != null)
+                ZoomChanged(this, null);
         }
 
         // Zoom image
-        private void zoomItem_Click( object sender, System.EventArgs e )
+        private void zoomItem_Click(object sender, System.EventArgs e)
         {
             // get menu item text
-            String t = ( (MenuItem) sender ).Text;
+            String t = ((MenuItem)sender).Text;
             // parse it`s value
-            int i = int.Parse( t.Remove( t.Length - 1, 1 ) );
+            int i = int.Parse(t.Remove(t.Length - 1, 1));
             // calc zoom factor
-            zoom = (float) i / 100;
+            zoom = (float)i / 100;
 
-            UpdateZoom( );
+            UpdateZoom();
         }
 
         // Zoom In image
-        private void ZoomIn( )
+        private void ZoomIn()
         {
             float z = zoom * 1.5f;
 
-            if ( z <= 10 )
+            if (z <= 10)
             {
                 zoom = z;
-                UpdateZoom( );
+                UpdateZoom();
             }
         }
 
         // On "Image->Zoom->Zoom In" item click
-        private void zoomInImageItem_Click( object sender, System.EventArgs e )
+        private void zoomInImageItem_Click(object sender, System.EventArgs e)
         {
-            ZoomIn( );
+            ZoomIn();
         }
 
         // Zoom Out image
-        private void ZoomOut( )
+        private void ZoomOut()
         {
             float z = zoom / 1.5f;
 
-            if ( z >= 0.05 )
+            if (z >= 0.05)
             {
                 zoom = z;
-                UpdateZoom( );
+                UpdateZoom();
             }
         }
 
         // On "Image->Zoom->Zoom out" item click
-        private void zoomOutImageItem_Click( object sender, System.EventArgs e )
+        private void zoomOutImageItem_Click(object sender, System.EventArgs e)
         {
-            ZoomOut( );
+            ZoomOut();
         }
 
         // Fit to size
-        private void FitToScreen( )
+        private void FitToScreen()
         {
             Rectangle rc = ClientRectangle;
 
-            zoom = Math.Min( (float) rc.Width / ( width + 2 ), (float) rc.Height / ( height + 2 ) );
+            zoom = Math.Min((float)rc.Width / (width + 2), (float)rc.Height / (height + 2));
 
-            UpdateZoom( );
+            UpdateZoom();
         }
 
         // On "Image->Zoom->Fit To Screen" item click
-        private void zoomFitImageItem_Click( object sender, System.EventArgs e )
+        private void zoomFitImageItem_Click(object sender, System.EventArgs e)
         {
-            FitToScreen( );
+            FitToScreen();
         }
 
         // Flip image
-        private void flipImageItem_Click( object sender, System.EventArgs e )
+        private void flipImageItem_Click(object sender, System.EventArgs e)
         {
-            image.RotateFlip( RotateFlipType.RotateNoneFlipY );
+            image.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
-            Invalidate( );
+            Invalidate();
         }
 
         // Mirror image
-        private void mirrorItem_Click( object sender, System.EventArgs e )
+        private void mirrorItem_Click(object sender, System.EventArgs e)
         {
-            image.RotateFlip( RotateFlipType.RotateNoneFlipX );
+            image.RotateFlip(RotateFlipType.RotateNoneFlipX);
 
-            Invalidate( );
+            Invalidate();
         }
 
         // Rotate image 90 degree
-        private void rotateImageItem_Click( object sender, System.EventArgs e )
+        private void rotateImageItem_Click(object sender, System.EventArgs e)
         {
-            image.RotateFlip( RotateFlipType.Rotate90FlipNone );
+            image.RotateFlip(RotateFlipType.Rotate90FlipNone);
 
             // update
-            UpdateNewImage( );
+            UpdateNewImage();
         }
 
         // Invert image
-        private void invertColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void invertColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Invert( ) );
+            ApplyFilter(new Invert());
         }
 
         // Rotatet colors
-        private void rotateColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void rotateColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new RotateChannels( ) );
+            ApplyFilter(new RotateChannels());
         }
 
         // Sepia image
-        private void sepiaColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void sepiaColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Sepia( ) );
+            ApplyFilter(new Sepia());
         }
 
         // Grayscale image
-        private void Grayscale( )
+        private void Grayscale()
         {
-            if ( image.PixelFormat == PixelFormat.Format8bppIndexed )
+            if (image.PixelFormat == PixelFormat.Format8bppIndexed)
             {
-                MessageBox.Show( "The image is already grayscale", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("The image is already grayscale", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            ApplyFilter( new GrayscaleBT709( ) );
+            ApplyFilter(new GrayscaleBT709());
         }
 
         // On "Filter->Color->Grayscale"
-        private void grayscaleColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void grayscaleColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            Grayscale( );
+            Grayscale();
         }
 
         // Converts grayscale image to RGB
-        private void toRgbColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void toRgbColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            if ( image.PixelFormat == PixelFormat.Format24bppRgb )
+            if (image.PixelFormat == PixelFormat.Format24bppRgb)
             {
-                MessageBox.Show( "The image is already RGB", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("The image is already RGB", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            ApplyFilter( new GrayscaleToRGB( ) );
+            ApplyFilter(new GrayscaleToRGB());
         }
 
         // Remove green and blue channels
-        private void redColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void redColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ChannelFiltering( new IntRange( 0, 255 ), new IntRange( 0, 0 ), new IntRange( 0, 0 ) ) );
+            ApplyFilter(new ChannelFiltering(new IntRange(0, 255), new IntRange(0, 0), new IntRange(0, 0)));
         }
 
         // Remove red and blue channels
-        private void greenColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void greenColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ChannelFiltering( new IntRange( 0, 0 ), new IntRange( 0, 255 ), new IntRange( 0, 0 ) ) );
+            ApplyFilter(new ChannelFiltering(new IntRange(0, 0), new IntRange(0, 255), new IntRange(0, 0)));
         }
 
         // Remove red and green channels
-        private void blueColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void blueColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ChannelFiltering( new IntRange( 0, 0 ), new IntRange( 0, 0 ), new IntRange( 0, 255 ) ) );
+            ApplyFilter(new ChannelFiltering(new IntRange(0, 0), new IntRange(0, 0), new IntRange(0, 255)));
         }
 
         // Remove green channel
-        private void cyanColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void cyanColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ChannelFiltering( new IntRange( 0, 0 ), new IntRange( 0, 255 ), new IntRange( 0, 255 ) ) );
+            ApplyFilter(new ChannelFiltering(new IntRange(0, 0), new IntRange(0, 255), new IntRange(0, 255)));
         }
 
         // Remove green channel
-        private void magentaColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void magentaColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ChannelFiltering( new IntRange( 0, 255 ), new IntRange( 0, 0 ), new IntRange( 0, 255 ) ) );
+            ApplyFilter(new ChannelFiltering(new IntRange(0, 255), new IntRange(0, 0), new IntRange(0, 255)));
         }
 
         // Remove blue channel
-        private void yellowColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void yellowColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ChannelFiltering( new IntRange( 0, 255 ), new IntRange( 0, 255 ), new IntRange( 0, 0 ) ) );
+            ApplyFilter(new ChannelFiltering(new IntRange(0, 255), new IntRange(0, 255), new IntRange(0, 0)));
         }
 
 
@@ -959,518 +981,518 @@ namespace IPLab
 
 
         // Extract red channel of image
-        private void extractRedColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void extractRedColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ExtractChannel( RGB.R ) );
+            ApplyFilter(new ExtractChannel(RGB.R));
         }
 
         // Extract green channel of image
-        private void extractGreenColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void extractGreenColorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ExtractChannel( RGB.G ) );
+            ApplyFilter(new ExtractChannel(RGB.G));
         }
 
         // Extract blue channel of image
-        private void extractRedBlueFiltersItem_Click( object sender, System.EventArgs e )
+        private void extractRedBlueFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ExtractChannel( RGB.B ) );
+            ApplyFilter(new ExtractChannel(RGB.B));
         }
 
         // Replace red channel
-        private void replaceRedColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void replaceRedColorFiltersItem_Click(object sender, System.EventArgs e)
         {
             // check pixel format
-            if ( image.PixelFormat != PixelFormat.Format24bppRgb )
+            if (image.PixelFormat != PixelFormat.Format24bppRgb)
             {
-                MessageBox.Show( "Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            Bitmap channelImage = host.GetImage( this, "Select an image which will replace the red channel in the current image", new Size( width, height ), PixelFormat.Format8bppIndexed );
+            Bitmap channelImage = host.GetImage(this, "Select an image which will replace the red channel in the current image", new Size(width, height), PixelFormat.Format8bppIndexed);
 
-            if ( channelImage != null )
-                ApplyFilter( new ReplaceChannel( RGB.R, channelImage ) );
+            if (channelImage != null)
+                ApplyFilter(new ReplaceChannel(RGB.R, channelImage));
         }
 
         // Replace green channel
-        private void replaceGreenColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void replaceGreenColorFiltersItem_Click(object sender, System.EventArgs e)
         {
             // check pixel format
-            if ( image.PixelFormat != PixelFormat.Format24bppRgb )
+            if (image.PixelFormat != PixelFormat.Format24bppRgb)
             {
-                MessageBox.Show( "Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            Bitmap channelImage = host.GetImage( this, "Select an image which will replace the green channel in the current image", new Size( width, height ), PixelFormat.Format8bppIndexed );
+            Bitmap channelImage = host.GetImage(this, "Select an image which will replace the green channel in the current image", new Size(width, height), PixelFormat.Format8bppIndexed);
 
-            if ( channelImage != null )
-                ApplyFilter( new ReplaceChannel( RGB.G, channelImage ) );
+            if (channelImage != null)
+                ApplyFilter(new ReplaceChannel(RGB.G, channelImage));
         }
 
         // Replace blue channel
-        private void replaceBlueColorFiltersItem_Click( object sender, System.EventArgs e )
+        private void replaceBlueColorFiltersItem_Click(object sender, System.EventArgs e)
         {
             // check pixel format
-            if ( image.PixelFormat != PixelFormat.Format24bppRgb )
+            if (image.PixelFormat != PixelFormat.Format24bppRgb)
             {
-                MessageBox.Show( "Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            Bitmap channelImage = host.GetImage( this, "Select an image which will replace the blue channel in the current image", new Size( width, height ), PixelFormat.Format8bppIndexed );
+            Bitmap channelImage = host.GetImage(this, "Select an image which will replace the blue channel in the current image", new Size(width, height), PixelFormat.Format8bppIndexed);
 
-            if ( channelImage != null )
-                ApplyFilter( new ReplaceChannel( RGB.B, channelImage ) );
+            if (channelImage != null)
+                ApplyFilter(new ReplaceChannel(RGB.B, channelImage));
         }
 
 
 
         // Extract Y channel of YCbCr color space
-        private void extracYFiltersItem_Click( object sender, System.EventArgs e )
+        private void extracYFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new YCbCrExtractChannel( YCbCr.YIndex ) );
+            ApplyFilter(new YCbCrExtractChannel(YCbCr.YIndex));
         }
 
         // Extract Cb channel of YCbCr color space
-        private void extracCbFiltersItem_Click( object sender, System.EventArgs e )
+        private void extracCbFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new YCbCrExtractChannel( YCbCr.CbIndex ) );
+            ApplyFilter(new YCbCrExtractChannel(YCbCr.CbIndex));
         }
 
         // Extract Cr channel of YCbCr color space
-        private void extracCrFiltersItem_Click( object sender, System.EventArgs e )
+        private void extracCrFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new YCbCrExtractChannel( YCbCr.CrIndex ) );
+            ApplyFilter(new YCbCrExtractChannel(YCbCr.CrIndex));
         }
 
         // Replace Y channel of YCbCr color space
-        private void replaceYFiltersItem_Click( object sender, System.EventArgs e )
+        private void replaceYFiltersItem_Click(object sender, System.EventArgs e)
         {
             // check pixel format
-            if ( image.PixelFormat != PixelFormat.Format24bppRgb )
+            if (image.PixelFormat != PixelFormat.Format24bppRgb)
             {
-                MessageBox.Show( "Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            Bitmap channelImage = host.GetImage( this, "Select an image which will replace the Y channel in the current image", new Size( width, height ), PixelFormat.Format8bppIndexed );
+            Bitmap channelImage = host.GetImage(this, "Select an image which will replace the Y channel in the current image", new Size(width, height), PixelFormat.Format8bppIndexed);
 
-            if ( channelImage != null )
-                ApplyFilter( new YCbCrReplaceChannel( YCbCr.YIndex, channelImage ) );
+            if (channelImage != null)
+                ApplyFilter(new YCbCrReplaceChannel(YCbCr.YIndex, channelImage));
         }
 
         // Replace Cb channel of YCbCr color space
-        private void replaceCbFiltersItem_Click( object sender, System.EventArgs e )
+        private void replaceCbFiltersItem_Click(object sender, System.EventArgs e)
         {
             // check pixel format
-            if ( image.PixelFormat != PixelFormat.Format24bppRgb )
+            if (image.PixelFormat != PixelFormat.Format24bppRgb)
             {
-                MessageBox.Show( "Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            Bitmap channelImage = host.GetImage( this, "Select an image which will replace the Cb channel in the current image", new Size( width, height ), PixelFormat.Format8bppIndexed );
+            Bitmap channelImage = host.GetImage(this, "Select an image which will replace the Cb channel in the current image", new Size(width, height), PixelFormat.Format8bppIndexed);
 
-            if ( channelImage != null )
-                ApplyFilter( new YCbCrReplaceChannel( YCbCr.CbIndex, channelImage ) );
+            if (channelImage != null)
+                ApplyFilter(new YCbCrReplaceChannel(YCbCr.CbIndex, channelImage));
         }
 
         // Replace Cr channel of YCbCr color space
-        private void replaceCrFiltersItem_Click( object sender, System.EventArgs e )
+        private void replaceCrFiltersItem_Click(object sender, System.EventArgs e)
         {
             // check pixel format
-            if ( image.PixelFormat != PixelFormat.Format24bppRgb )
+            if (image.PixelFormat != PixelFormat.Format24bppRgb)
             {
-                MessageBox.Show( "Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("Channels replacement can be applied to RGB images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            Bitmap channelImage = host.GetImage( this, "Select an image which will replace the Cr channel in the current image", new Size( width, height ), PixelFormat.Format8bppIndexed );
+            Bitmap channelImage = host.GetImage(this, "Select an image which will replace the Cr channel in the current image", new Size(width, height), PixelFormat.Format8bppIndexed);
 
-            if ( channelImage != null )
-                ApplyFilter( new YCbCrReplaceChannel( YCbCr.CrIndex, channelImage ) );
+            if (channelImage != null)
+                ApplyFilter(new YCbCrReplaceChannel(YCbCr.CrIndex, channelImage));
         }
 
         // Threshold binarization
-        private void Threshold( )
+        private void Threshold()
         {
-            ThresholdForm form = new ThresholdForm( );
+            ThresholdForm form = new ThresholdForm();
 
             // set image to preview
             form.Image = image;
 
-            if ( form.ShowDialog( ) == DialogResult.OK )
+            if (form.ShowDialog() == DialogResult.OK)
             {
-                ApplyFilter( form.Filter );
+                ApplyFilter(form.Filter);
             }
         }
 
         // On "Filters->Binarization->Threshold" menu item click
-        private void thresholdBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void thresholdBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            Threshold( );
+            Threshold();
         }
 
         // Threshold binarization with carry
-        private void thresholdCarryBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void thresholdCarryBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ThresholdWithCarry( ) );
+            ApplyFilter(new ThresholdWithCarry());
         }
 
         // Ordered dithering
-        private void orderedDitherBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void orderedDitherBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new OrderedDithering( ) );
+            ApplyFilter(new OrderedDithering());
         }
 
         // Bayer ordered dithering
-        private void bayerDitherBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void bayerDitherBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new BayerDithering( ) );
+            ApplyFilter(new BayerDithering());
         }
 
         // Binarization using Floyd-Steinverg dithering algorithm
-        private void floydBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void floydBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new FloydSteinbergDithering( ) );
+            ApplyFilter(new FloydSteinbergDithering());
         }
 
         // Binarization using Burkes dithering algorithm
-        private void burkesBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void burkesBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new BurkesDithering( ) );
+            ApplyFilter(new BurkesDithering());
         }
 
         // Binarization using Stucki dithering algorithm
-        private void stuckiBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void stuckiBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new StuckiDithering( ) );
+            ApplyFilter(new StuckiDithering());
         }
 
         // Binarization using Jarvis, Judice and Ninke dithering algorithm
-        private void jarvisBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void jarvisBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new JarvisJudiceNinkeDithering( ) );
+            ApplyFilter(new JarvisJudiceNinkeDithering());
         }
 
         // Binarization using Sierra dithering algorithm
-        private void sierraBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void sierraBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new SierraDithering( ) );
+            ApplyFilter(new SierraDithering());
         }
 
         // Binarization using Stevenson and Arce dithering algorithm
-        private void stevensonBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void stevensonBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new StevensonArceDithering( ) );
+            ApplyFilter(new StevensonArceDithering());
         }
 
         // Threshold using Simple Image Statistics
-        private void sisThresholdBinaryFiltersItem_Click( object sender, System.EventArgs e )
+        private void sisThresholdBinaryFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new SISThreshold( ) );
+            ApplyFilter(new SISThreshold());
         }
 
         // Errosion (Mathematical Morphology)
-        private void erosionMorphologyFiltersItem_Click( object sender, System.EventArgs e )
+        private void erosionMorphologyFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Erosion( ) );
+            ApplyFilter(new Erosion());
         }
 
         // Dilatation (Mathematical Morphology)
-        private void dilatationMorphologyFiltersItem_Click( object sender, System.EventArgs e )
+        private void dilatationMorphologyFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Dilatation( ) );
+            ApplyFilter(new Dilatation());
         }
 
         // Opening (Mathematical Morphology)
-        private void openingMorphologyFiltersItem_Click( object sender, System.EventArgs e )
+        private void openingMorphologyFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Opening( ) );
+            ApplyFilter(new Opening());
         }
 
         // Closing (Mathematical Morphology)
-        private void closingMorphologyFiltersItem_Click( object sender, System.EventArgs e )
+        private void closingMorphologyFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Closing( ) );
+            ApplyFilter(new Closing());
         }
 
 
 
         // Mean
-        private void meanConvolutionFiltersItem_Click( object sender, System.EventArgs e )
+        private void meanConvolutionFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Mean( ) );
+            ApplyFilter(new Mean());
         }
 
         // Blur
-        private void blurConvolutionFiltersItem_Click( object sender, System.EventArgs e )
+        private void blurConvolutionFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Blur( ) );
+            ApplyFilter(new Blur());
         }
 
 
         // Sharpen
-        private void sharpenConvolutionFiltersItem_Click( object sender, System.EventArgs e )
+        private void sharpenConvolutionFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Sharpen( ) );
+            ApplyFilter(new Sharpen());
         }
 
         // Edges
-        private void edgesConvolutionFiltersItem_Click( object sender, System.EventArgs e )
+        private void edgesConvolutionFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Edges( ) );
+            ApplyFilter(new Edges());
         }
 
 
         // Merge two images
-        private void mergeTwosrcFiltersItem_Click( object sender, System.EventArgs e )
+        private void mergeTwosrcFiltersItem_Click(object sender, System.EventArgs e)
         {
-            Bitmap overlayImage = host.GetImage( this, "Select an image to merge with the curren image", new Size( -1, -1 ), image.PixelFormat );
+            Bitmap overlayImage = host.GetImage(this, "Select an image to merge with the curren image", new Size(-1, -1), image.PixelFormat);
 
-            if ( overlayImage != null )
-                ApplyFilter( new Merge( overlayImage ) );
+            if (overlayImage != null)
+                ApplyFilter(new Merge(overlayImage));
         }
 
         // Intersect
-        private void intersectTwosrcFiltersItem_Click( object sender, System.EventArgs e )
+        private void intersectTwosrcFiltersItem_Click(object sender, System.EventArgs e)
         {
-            Bitmap overlayImage = host.GetImage( this, "Select an image to intersect with the curren image", new Size( -1, -1 ), image.PixelFormat );
+            Bitmap overlayImage = host.GetImage(this, "Select an image to intersect with the curren image", new Size(-1, -1), image.PixelFormat);
 
-            if ( overlayImage != null )
-                ApplyFilter( new Intersect( overlayImage ) );
+            if (overlayImage != null)
+                ApplyFilter(new Intersect(overlayImage));
         }
 
         // Add
-        private void addTwosrcFiltersItem_Click( object sender, System.EventArgs e )
+        private void addTwosrcFiltersItem_Click(object sender, System.EventArgs e)
         {
-            Bitmap overlayImage = host.GetImage( this, "Select an image to add to the curren image", new Size( -1, -1 ), image.PixelFormat );
+            Bitmap overlayImage = host.GetImage(this, "Select an image to add to the curren image", new Size(-1, -1), image.PixelFormat);
 
-            if ( overlayImage != null )
-                ApplyFilter( new Add( overlayImage ) );
+            if (overlayImage != null)
+                ApplyFilter(new Add(overlayImage));
         }
 
         // Subtract
-        private void subtractTwosrcFiltersItem_Click( object sender, System.EventArgs e )
+        private void subtractTwosrcFiltersItem_Click(object sender, System.EventArgs e)
         {
-            Bitmap overlayImage = host.GetImage( this, "Select an image to subtract from the curren image", new Size( -1, -1 ), image.PixelFormat );
+            Bitmap overlayImage = host.GetImage(this, "Select an image to subtract from the curren image", new Size(-1, -1), image.PixelFormat);
 
-            if ( overlayImage != null )
-                ApplyFilter( new Subtract( overlayImage ) );
+            if (overlayImage != null)
+                ApplyFilter(new Subtract(overlayImage));
         }
 
         // Difference
-        private void differenceTwosrcFiltersItem_Click( object sender, System.EventArgs e )
+        private void differenceTwosrcFiltersItem_Click(object sender, System.EventArgs e)
         {
-            Bitmap overlayImage = host.GetImage( this, "Select an image to get difference with the curren image", new Size( width, height ), image.PixelFormat );
+            Bitmap overlayImage = host.GetImage(this, "Select an image to get difference with the curren image", new Size(width, height), image.PixelFormat);
 
-            if ( overlayImage != null )
-                ApplyFilter( new Difference( overlayImage ) );
+            if (overlayImage != null)
+                ApplyFilter(new Difference(overlayImage));
         }
 
         // Move towards
-        private void moveTowardsTwosrcFiltersItem_Click( object sender, System.EventArgs e )
+        private void moveTowardsTwosrcFiltersItem_Click(object sender, System.EventArgs e)
         {
-            Bitmap overlayImage = host.GetImage( this, "Select an image to which the curren image will be moved", new Size( width, height ), image.PixelFormat );
+            Bitmap overlayImage = host.GetImage(this, "Select an image to which the curren image will be moved", new Size(width, height), image.PixelFormat);
 
-            if ( overlayImage != null )
-                ApplyFilter( new MoveTowards( overlayImage, 10 ) );
+            if (overlayImage != null)
+                ApplyFilter(new MoveTowards(overlayImage, 10));
         }
 
 
         // Homogenity edge detector
-        private void homogenityEdgeFiltersItem_Click( object sender, System.EventArgs e )
+        private void homogenityEdgeFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new HomogenityEdgeDetector( ) );
+            ApplyFilter(new HomogenityEdgeDetector());
         }
 
         // Difference edge detector
-        private void differenceEdgeFiltersItem_Click( object sender, System.EventArgs e )
+        private void differenceEdgeFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new DifferenceEdgeDetector( ) );
+            ApplyFilter(new DifferenceEdgeDetector());
         }
 
         // Sobel edge detector
-        private void sobelEdgeFiltersItem_Click( object sender, System.EventArgs e )
+        private void sobelEdgeFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new SobelEdgeDetector( ) );
+            ApplyFilter(new SobelEdgeDetector());
         }
 
 
 
         // Conservative smoothing
-        private void conservativeSmoothingFiltersItem_Click( object sender, System.EventArgs e )
+        private void conservativeSmoothingFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new ConservativeSmoothing( ) );
+            ApplyFilter(new ConservativeSmoothing());
         }
 
 
 
         // Random jitter filter
-        private void jitterFiltersItem_Click( object sender, System.EventArgs e )
+        private void jitterFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Jitter( 1 ) );
+            ApplyFilter(new Jitter(1));
         }
 
 
 
         // Simple skeletonization
-        private void simpleSkeletonizationFiltersItem_Click( object sender, System.EventArgs e )
+        private void simpleSkeletonizationFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new SimpleSkeletonization( ) );
+            ApplyFilter(new SimpleSkeletonization());
         }
 
 
         // Conected components labeling
-        private void labelingFiltersItem_Click( object sender, System.EventArgs e )
+        private void labelingFiltersItem_Click(object sender, System.EventArgs e)
         {
-            if ( image.PixelFormat != PixelFormat.Format8bppIndexed )
+            if (image.PixelFormat != PixelFormat.Format8bppIndexed)
             {
-                MessageBox.Show( "Connected components labeling can be applied to binary images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("Connected components labeling can be applied to binary images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            ApplyFilter( new ConnectedComponentsLabeling( ) );
+            ApplyFilter(new ConnectedComponentsLabeling());
         }
 
         // Extract separate blobs
-        private void blobExtractorFiltersItem_Click( object sender, System.EventArgs e )
+        private void blobExtractorFiltersItem_Click(object sender, System.EventArgs e)
         {
-            if ( image.PixelFormat != PixelFormat.Format8bppIndexed )
+            if (image.PixelFormat != PixelFormat.Format8bppIndexed)
             {
-                MessageBox.Show( "Blob extractor can be applied to binary images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("Blob extractor can be applied to binary images only", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            BlobCounter blobCounter = new BlobCounter( image );
-            Blob[] blobs = blobCounter.GetObjects( image );
+            BlobCounter blobCounter = new BlobCounter(image);
+            Blob[] blobs = blobCounter.GetObjects(image);
 
-            foreach ( Blob blob in blobs )
+            foreach (Blob blob in blobs)
             {
-                host.NewDocument( blob.Image );
+                host.NewDocument(blob.Image);
             }
         }
 
         // Resize the image
-        private void ResizeImage( )
+        private void ResizeImage()
         {
-            ResizeForm form = new ResizeForm( );
+            ResizeForm form = new ResizeForm();
 
-            form.OriginalSize = new Size( width, height );
+            form.OriginalSize = new Size(width, height);
 
-            if ( form.ShowDialog( ) == DialogResult.OK )
+            if (form.ShowDialog() == DialogResult.OK)
             {
-                ApplyFilter( form.Filter );
+                ApplyFilter(form.Filter);
             }
         }
 
         // On "Filters->Resize" menu item click
-        private void resizeFiltersItem_Click( object sender, System.EventArgs e )
+        private void resizeFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ResizeImage( );
+            ResizeImage();
         }
 
         // Rotate the image
-        private void RotateImage( )
+        private void RotateImage()
         {
-            RotateForm form = new RotateForm( );
+            RotateForm form = new RotateForm();
 
-            if ( form.ShowDialog( ) == DialogResult.OK )
+            if (form.ShowDialog() == DialogResult.OK)
             {
-                ApplyFilter( form.Filter );
+                ApplyFilter(form.Filter);
             }
         }
 
         // On "Filters->Rotate" menu item click
-        private void rotateFiltersItem_Click( object sender, System.EventArgs e )
+        private void rotateFiltersItem_Click(object sender, System.EventArgs e)
         {
-            RotateImage( );
+            RotateImage();
         }
 
 
         // Median filter
-        private void medianFiltersItem_Click( object sender, System.EventArgs e )
+        private void medianFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ApplyFilter( new Median( ) );
+            ApplyFilter(new Median());
         }
 
 
         // Fourier transformation
-        private void ForwardFourierTransformation( )
+        private void ForwardFourierTransformation()
         {
-            System.Diagnostics.Debug.WriteLine( (int) FourierTransform.Direction.Forward );
-            System.Diagnostics.Debug.WriteLine( (int) FourierTransform.Direction.Backward );
+            System.Diagnostics.Debug.WriteLine((int)FourierTransform.Direction.Forward);
+            System.Diagnostics.Debug.WriteLine((int)FourierTransform.Direction.Backward);
 
-            if ( ( !AForge.Math.Tools.IsPowerOf2( width ) ) ||
-                ( !AForge.Math.Tools.IsPowerOf2( height ) ) )
+            if ((!AForge.Math.Tools.IsPowerOf2(width)) ||
+                (!AForge.Math.Tools.IsPowerOf2(height)))
             {
-                MessageBox.Show( "Fourier trasformation can be applied to an image with width and height of power of 2", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation );
+                MessageBox.Show("Fourier trasformation can be applied to an image with width and height of power of 2", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            ComplexImage cImage = ComplexImage.FromBitmap( image );
+            ComplexImage cImage = ComplexImage.FromBitmap(image);
 
-            cImage.ForwardFourierTransform( );
-            host.NewDocument( cImage );
+            cImage.ForwardFourierTransform();
+            host.NewDocument(cImage);
         }
 
         // On "Filters->Fourier Transformation" click
-        private void fourierFiltersItem_Click( object sender, System.EventArgs e )
+        private void fourierFiltersItem_Click(object sender, System.EventArgs e)
         {
-            ForwardFourierTransformation( );
+            ForwardFourierTransformation();
         }
 
         // Calculate image and screen coordinates of the point
-        private void GetImageAndScreenPoints( Point point, out Point imgPoint, out Point screenPoint )
+        private void GetImageAndScreenPoints(Point point, out Point imgPoint, out Point screenPoint)
         {
             Rectangle rc = this.ClientRectangle;
-            int width = (int) ( this.width * zoom );
-            int height = (int) ( this.height * zoom );
-            int x = ( rc.Width < width ) ? this.AutoScrollPosition.X : ( rc.Width - width ) / 2;
-            int y = ( rc.Height < height ) ? this.AutoScrollPosition.Y : ( rc.Height - height ) / 2;
+            int width = (int)(this.width * zoom);
+            int height = (int)(this.height * zoom);
+            int x = (rc.Width < width) ? this.AutoScrollPosition.X : (rc.Width - width) / 2;
+            int y = (rc.Height < height) ? this.AutoScrollPosition.Y : (rc.Height - height) / 2;
 
-            int ix = Math.Min( Math.Max( x, point.X ), x + width - 1 );
-            int iy = Math.Min( Math.Max( y, point.Y ), y + height - 1 );
+            int ix = Math.Min(Math.Max(x, point.X), x + width - 1);
+            int iy = Math.Min(Math.Max(y, point.Y), y + height - 1);
 
-            ix = (int) ( ( ix - x ) / zoom );
-            iy = (int) ( ( iy - y ) / zoom );
+            ix = (int)((ix - x) / zoom);
+            iy = (int)((iy - y) / zoom);
 
             // image point
-            imgPoint = new Point( ix, iy );
+            imgPoint = new Point(ix, iy);
             // screen point
-            screenPoint = this.PointToScreen( new Point( (int) ( ix * zoom + x ), (int) ( iy * zoom + y ) ) );
+            screenPoint = this.PointToScreen(new Point((int)(ix * zoom + x), (int)(iy * zoom + y)));
         }
 
         // Normalize points so, that pt1 becomes top-left point of rectangle
         // and pt2 becomes right-bottom
-        private void NormalizePoints( ref Point pt1, ref Point pt2 )
+        private void NormalizePoints(ref Point pt1, ref Point pt2)
         {
             Point t1 = pt1;
             Point t2 = pt2;
 
-            pt1.X = Math.Min( t1.X, t2.X );
-            pt1.Y = Math.Min( t1.Y, t2.Y );
-            pt2.X = Math.Max( t1.X, t2.X );
-            pt2.Y = Math.Max( t1.Y, t2.Y );
+            pt1.X = Math.Min(t1.X, t2.X);
+            pt1.Y = Math.Min(t1.Y, t2.Y);
+            pt2.X = Math.Max(t1.X, t2.X);
+            pt2.Y = Math.Max(t1.Y, t2.Y);
         }
 
         // Draw selection rectangle
-        private void DrawSelectionFrame( Graphics g )
+        private void DrawSelectionFrame(Graphics g)
         {
             Point sp = startW;
             Point ep = endW;
 
             // Normalize points
-            NormalizePoints( ref sp, ref ep );
+            NormalizePoints(ref sp, ref ep);
             // Draw reversible frame
-            ControlPaint.DrawReversibleFrame( new Rectangle( sp.X, sp.Y, ep.X - sp.X + 1, ep.Y - sp.Y + 1 ), Color.White, FrameStyle.Dashed );
+            ControlPaint.DrawReversibleFrame(new Rectangle(sp.X, sp.Y, ep.X - sp.X + 1, ep.Y - sp.Y + 1), Color.White, FrameStyle.Dashed);
         }
 
         // Crop the image
-        private void Crop( )
+        private void Crop()
         {
-            if ( !cropping )
+            if (!cropping)
             {
                 // turn on
                 cropping = true;
@@ -1486,26 +1508,26 @@ namespace IPLab
         }
 
         // On "Image->Crop" - turn on/off cropping mode
-        private void cropImageItem_Click( object sender, System.EventArgs e )
+        private void cropImageItem_Click(object sender, System.EventArgs e)
         {
-            Crop( );
+            Crop();
         }
 
         // On mouse down
-        private void ImageDoc_MouseDown( object sender, System.Windows.Forms.MouseEventArgs e )
+        private void ImageDoc_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if ( e.Button == MouseButtons.Right )
+            if (e.Button == MouseButtons.Right)
             {
                 // turn off cropping mode
-                if ( !dragging )
+                if (!dragging)
                 {
                     cropping = false;
                     this.Cursor = Cursors.Default;
                 }
             }
-            else if ( e.Button == MouseButtons.Left )
+            else if (e.Button == MouseButtons.Left)
             {
-                if ( cropping )
+                if (cropping)
                 {
                     // start dragging
                     dragging = true;
@@ -1513,24 +1535,49 @@ namespace IPLab
                     this.Capture = true;
 
                     // get selection start point
-                    GetImageAndScreenPoints( new Point( e.X, e.Y ), out start, out startW );
+                    GetImageAndScreenPoints(new Point(e.X, e.Y), out start, out startW);
 
                     // end point is the same as start
                     end = start;
                     endW = startW;
 
                     // draw frame
-                    Graphics g = this.CreateGraphics( );
-                    DrawSelectionFrame( g );
-                    g.Dispose( );
+                    Graphics g = this.CreateGraphics();
+                    DrawSelectionFrame(g);
+                    g.Dispose();
+                }
+                else if (drawingLine)
+                {
+                    Point end;
+                    GetImageAndScreenPoints(new Point(e.X, e.Y), out imageStart, out end);
+                    dragging = true;
                 }
             }
         }
 
         // On mouse up
-        private void ImageDoc_MouseUp( object sender, System.Windows.Forms.MouseEventArgs e )
+        private void ImageDoc_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (dragging)
+            if (dragging && drawingLine)
+            {
+                dragging = drawingLine = false;
+                this.Capture = false;
+                // set default mouse pointer
+                this.Cursor = Cursors.Default;
+
+                // erase frame
+                Graphics g = this.CreateGraphics();
+                DrawSelectionFrame(g);
+                g.Dispose();
+
+                Point end;
+                GetImageAndScreenPoints(new Point(e.X, e.Y), out imageEnd, out end);
+                dragging = false;
+                DrawLineInt(image, imageStart.X, imageEnd.X, imageStart.Y, imageEnd.Y);
+                // normalize start and end points
+                NormalizePoints(ref start, ref end);
+            }
+            else if (dragging)
             {
                 // stop dragging and cropping
                 dragging = cropping = false;
@@ -1550,73 +1597,90 @@ namespace IPLab
                 // crop the image
                 ApplyFilter(new Crop(new Rectangle(start.X, start.Y, end.X - start.X + 1, end.Y - start.Y + 1)));
             }
+            
         }
 
         // On mouse move
-        private void ImageDoc_MouseMove( object sender, System.Windows.Forms.MouseEventArgs e )
+        private void ImageDoc_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if ( dragging )
+            if (dragging && !drawingLine)
             {
 
-                Graphics g = this.CreateGraphics( );
+                Graphics g = this.CreateGraphics();
 
                 // erase frame
-                DrawSelectionFrame( g );
+                DrawSelectionFrame(g);
 
                 // get selection end point
-                GetImageAndScreenPoints( new Point( e.X, e.Y ), out end, out endW );
+                GetImageAndScreenPoints(new Point(e.X, e.Y), out end, out endW);
 
                 // draw frame
-                DrawSelectionFrame( g );
+                DrawSelectionFrame(g);
 
-                g.Dispose( );
+                g.Dispose();
 
-                if ( SelectionChanged != null )
+                if (SelectionChanged != null)
                 {
                     Point sp = start;
                     Point ep = end;
 
                     // normalize start and end points
-                    NormalizePoints( ref sp, ref ep );
+                    NormalizePoints(ref sp, ref ep);
 
-                    SelectionChanged( this, new SelectionEventArgs(
-                        sp, new Size( ep.X - sp.X + 1, ep.Y - sp.Y + 1 ) ) );
+                    SelectionChanged(this, new SelectionEventArgs(
+                        sp, new Size(ep.X - sp.X + 1, ep.Y - sp.Y + 1)));
                 }
             }
             else
             {
-                if ( MouseImagePosition != null )
+                if (MouseImagePosition != null)
                 {
                     Rectangle rc = this.ClientRectangle;
-                    int width = (int) ( this.width * zoom );
-                    int height = (int) ( this.height * zoom );
-                    int x = ( rc.Width < width ) ? this.AutoScrollPosition.X : ( rc.Width - width ) / 2;
-                    int y = ( rc.Height < height ) ? this.AutoScrollPosition.Y : ( rc.Height - height ) / 2;
+                    int width = (int)(this.width * zoom);
+                    int height = (int)(this.height * zoom);
+                    int x = (rc.Width < width) ? this.AutoScrollPosition.X : (rc.Width - width) / 2;
+                    int y = (rc.Height < height) ? this.AutoScrollPosition.Y : (rc.Height - height) / 2;
 
-                    if ( ( e.X >= x ) && ( e.Y >= y ) &&
-                        ( e.X < x + width ) && ( e.Y < y + height ) )
+                    if ((e.X >= x) && (e.Y >= y) &&
+                        (e.X < x + width) && (e.Y < y + height))
                     {
                         // mouse is over the image
-                        MouseImagePosition( this, new SelectionEventArgs(
-                            new Point( (int) ( ( e.X - x ) / zoom ), (int) ( ( e.Y - y ) / zoom ) ) ) );
+                        MouseImagePosition(this, new SelectionEventArgs(
+                            new Point((int)((e.X - x) / zoom), (int)((e.Y - y) / zoom))));
                     }
                     else
                     {
                         // mouse is outside image region
-                        MouseImagePosition( this, new SelectionEventArgs( new Point( -1, -1 ) ) );
+                        MouseImagePosition(this, new SelectionEventArgs(new Point(-1, -1)));
                     }
                 }
             }
         }
 
         // On mouse leave
-        private void ImageDoc_MouseLeave( object sender, System.EventArgs e )
+        private void ImageDoc_MouseLeave(object sender, System.EventArgs e)
         {
-            if ( ( !dragging ) && ( MouseImagePosition != null ) )
+            if ((!dragging) && (MouseImagePosition != null))
             {
-                MouseImagePosition( this, new SelectionEventArgs( new Point( -1, -1 ) ) );
+                MouseImagePosition(this, new SelectionEventArgs(new Point(-1, -1)));
             }
         }
+
+        #region Kosala
+
+        public void DrawLineInt(Bitmap bmp, int x1, int x2, int y1, int y2)
+        {
+            Pen blackPen = new Pen(Color.Black, 3);
+
+            // Draw line to screen.
+            using (var graphics = Graphics.FromImage(bmp))
+            {
+                graphics.DrawLine(blackPen, x1, y1, x2, y2);
+            }
+            UpdateNewImage();
+        }
+
+        #endregion
 
         #region Tharindu Edit
 
@@ -1894,9 +1958,14 @@ namespace IPLab
             }
         }
 
-        
+
         #endregion
-        
+
+        private void menuItem2_Click(object sender, EventArgs e)
+        {
+            drawingLine = true;
+        }
+
     }
 
     // Selection arguments
@@ -1906,11 +1975,11 @@ namespace IPLab
         private Size size;
 
         // Constructors
-        public SelectionEventArgs( Point location )
+        public SelectionEventArgs(Point location)
         {
             this.location = location;
         }
-        public SelectionEventArgs( Point location, Size size )
+        public SelectionEventArgs(Point location, Size size)
         {
             this.location = location;
             this.size = size;
