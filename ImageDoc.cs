@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Collections;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
 
 using WeifenLuo.WinFormsUI;
@@ -33,8 +35,8 @@ namespace IPLab
 
         private bool cropping = false;
         private bool dragging = false;
-
         private bool drawingLine = false;
+        private bool temp = false;
 
         private Point start, end, startW, endW;
         private Point imageStart, imageEnd;
@@ -85,6 +87,8 @@ namespace IPLab
         #endregion
         private MenuItem menuItem1;
         private MenuItem menuItem2;
+        private MenuItem menuItem4;
+        private MenuItem menuItem9;
 
         // Image property
         public Bitmap Image
@@ -231,6 +235,8 @@ namespace IPLab
             this.edgeSegment = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -511,7 +517,9 @@ namespace IPLab
             // 
             this.menuItem1.Index = 3;
             this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem2});
+            this.menuItem2,
+            this.menuItem4,
+            this.menuItem9});
             this.menuItem1.Text = "Edit";
             // 
             // menuItem2
@@ -519,6 +527,18 @@ namespace IPLab
             this.menuItem2.Index = 0;
             this.menuItem2.Text = "Draw Line";
             this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 1;
+            this.menuItem4.Text = "Test";
+            this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
+            // 
+            // menuItem9
+            // 
+            this.menuItem9.Index = 2;
+            this.menuItem9.Text = "Pixel Value";
+            this.menuItem9.Click += new System.EventHandler(this.menuItem9_Click);
             // 
             // ImageDoc
             // 
@@ -528,6 +548,7 @@ namespace IPLab
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";
             this.Text = "Image";
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ImageDoc_MouseClick);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ImageDoc_MouseDown);
             this.MouseLeave += new System.EventHandler(this.ImageDoc_MouseLeave);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageDoc_MouseMove);
@@ -1597,7 +1618,7 @@ namespace IPLab
                 // crop the image
                 ApplyFilter(new Crop(new Rectangle(start.X, start.Y, end.X - start.X + 1, end.Y - start.Y + 1)));
             }
-            
+
         }
 
         // On mouse move
@@ -1668,9 +1689,77 @@ namespace IPLab
 
         #region Kosala
 
-        public void DrawLineInt(Bitmap bmp, int x1, int x2, int y1, int y2)
+        private int getVariationofDepth()
         {
-            Pen blackPen = new Pen(Color.Black, 3);
+            List<int> depths = getLengthToBorder();
+            int x = 0;
+            x++;
+            return 0;
+        }
+
+        private List<int> getLengthToBorder()
+        {
+            List<int> lengths = new List<int>();
+            int yValueofLine = getYvalueofLine(), count = 0;
+
+            for (int i = 0; i < image.Width; i++)
+            {
+                int j = 0;
+                if (rgbIsInRange(image.GetPixel(i, yValueofLine), Color.Red, 50))
+                {
+                    while (rgbIsInRange(image.GetPixel(i, yValueofLine + j), Color.Red, 50))
+                    {
+                        j++;
+                    }
+                    Color temp = image.GetPixel(i, yValueofLine + j);
+                    while (rgbIsInRange(image.GetPixel(i, yValueofLine + j + 1), temp, 50))
+                    {
+                        count++;
+                        j++;
+                    }
+                }
+                lengths.Add(count);
+            }
+
+            return lengths;
+        }
+
+        private int getYvalueofLine()
+        {
+            int y = 0;
+            for (int i = 0; i < image.Height; i++)
+            {
+                if (rgbIsInRange(image.GetPixel(image.Width / 2, i), Color.Red, 50))
+                {
+                    y = i;
+                    break;
+                }
+            }
+            return y;
+        }
+
+        /// <summary>
+        /// calculate wheather the two colors are in the same region or not
+        /// </summary>
+        /// <param name="reference">reference color</param>
+        /// <param name="color">color which will check with reference color</param>
+        /// <param name="tolerence">tolerence respect to the reference color</param>
+        /// <returns>returns true if two colors are in same region, else return false</returns>
+        private static bool rgbIsInRange(Color reference, Color color, int tolerence)
+        {
+            if (((reference.A - tolerence) < color.A) && (color.A < (reference.A + tolerence)) &&
+                ((reference.R - tolerence) < color.R) && (color.R < (reference.R + tolerence)) &&
+                ((reference.G - tolerence) < color.G) && (color.G < (reference.G + tolerence)) &&
+                ((reference.B - tolerence) < color.B) && (color.B < (reference.B + tolerence)))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void DrawLineInt(Bitmap bmp, int x1, int x2, int y1, int y2)
+        {
+            Pen blackPen = new Pen(Color.Red, 2);
 
             // Draw line to screen.
             using (var graphics = Graphics.FromImage(bmp))
@@ -1678,6 +1767,20 @@ namespace IPLab
                 graphics.DrawLine(blackPen, x1, y1, x2, y2);
             }
             UpdateNewImage();
+            RotateImageBiCUbic(getAngleofLine() * 180 / Math.PI);
+        }
+
+        private double getAngleofLine()
+        {
+            return Math.Atan(((imageStart.Y - imageEnd.Y) * 1.0) / (imageStart.X - imageEnd.X));
+        }
+
+        private Bitmap RotateImageBiCUbic(double angle)
+        {
+            RotateBilinear rotateFilter = new RotateBilinear(angle, false);
+            image = rotateFilter.Apply(image);
+            UpdateNewImage();
+            return image;
         }
 
         #endregion
@@ -1964,6 +2067,19 @@ namespace IPLab
         private void menuItem2_Click(object sender, EventArgs e)
         {
             drawingLine = true;
+        }
+
+        private void menuItem4_Click(object sender, EventArgs e)
+        {
+            getVariationofDepth();
+        }
+
+        private void menuItem9_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void ImageDoc_MouseClick(object sender, MouseEventArgs e)
+        {
         }
 
     }
