@@ -93,7 +93,6 @@ namespace IPLab
         private MenuItem menuItem1;
         private MenuItem menuItem2;
         private MenuItem menuItem4;
-        private MenuItem menuItem9;
         private MenuItem resxultsMenu;
         private MenuItem csvResult;
 
@@ -253,7 +252,6 @@ namespace IPLab
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
-            this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.verificationMenu = new System.Windows.Forms.MenuItem();
             this.checkerboardMenu = new System.Windows.Forms.MenuItem();
             this.dytheringMenu = new System.Windows.Forms.MenuItem();
@@ -555,9 +553,8 @@ namespace IPLab
             this.menuItem1.Index = 4;
             this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem2,
-            this.menuItem4,
-            this.menuItem9});
-            this.menuItem1.Text = "Edit";
+            this.menuItem4});
+            this.menuItem1.Text = "Line Variance Analysis";
             // 
             // menuItem2
             // 
@@ -568,14 +565,8 @@ namespace IPLab
             // menuItem4
             // 
             this.menuItem4.Index = 1;
-            this.menuItem4.Text = "Test";
+            this.menuItem4.Text = "Analyze";
             this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
-            // 
-            // menuItem9
-            // 
-            this.menuItem9.Index = 2;
-            this.menuItem9.Text = "Pixel Value";
-            this.menuItem9.Click += new System.EventHandler(this.menuItem9_Click);
             // 
             // verificationMenu
             // 
@@ -607,7 +598,7 @@ namespace IPLab
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(528, 417);
+            this.ClientSize = new System.Drawing.Size(528, 397);
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";
             this.Text = "Image";
@@ -1758,7 +1749,7 @@ namespace IPLab
             List<int> depths = getAllDepthsToBorder();
             double variance = Variance(depths, Mean(depths));
             MessageBox.Show(this, variance.ToString());
-            writeResult(variance, "BubbleJet");
+            writeResult(variance, "Original");
             return variance;
         }
 
@@ -2243,9 +2234,9 @@ namespace IPLab
 
         private void ImageDoc_MouseClick(object sender, MouseEventArgs e)
         {
-            Point imagePoint, nothing;
-            GetImageAndScreenPoints(new Point(e.X, e.Y), out imagePoint, out nothing);
-            MessageBox.Show(imagePoint.ToString() + "       " + LineStart.ToString() + "       " + lineLength.ToString());
+            //Point imagePoint, nothing;
+            //GetImageAndScreenPoints(new Point(e.X, e.Y), out imagePoint, out nothing);
+            //MessageBox.Show(imagePoint.ToString() + "       " + LineStart.ToString() + "       " + lineLength.ToString());
         }
 
 
