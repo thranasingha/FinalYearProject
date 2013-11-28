@@ -1786,6 +1786,8 @@ namespace IPLab
         private List<int> getLengthToBorder()
         {
             List<int> lengths = new List<int>();
+
+
             int yValueofLine = getYvalueofLine(), count = 0;
 
             for (int i = 0; i < image.Width; i++)
