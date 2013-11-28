@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Collections;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 using WeifenLuo.WinFormsUI;
@@ -28,6 +29,7 @@ namespace IPLab
         private System.Drawing.Bitmap image = null;
         private string fileName = null;
         private int width;
+        private double lineLength = 0;
         private int height;
         private float zoom = 1;
         private IDocumentsHost host = null;
@@ -40,6 +42,7 @@ namespace IPLab
 
         private Point start, end, startW, endW;
         private Point imageStart, imageEnd;
+        private Point LineStart;
 
         #region form items
 
@@ -1593,6 +1596,7 @@ namespace IPLab
 
                 Point end;
                 GetImageAndScreenPoints(new Point(e.X, e.Y), out imageEnd, out end);
+                lineLength = Math.Sqrt(Math.Pow(imageEnd.X - imageStart.X, 2) + Math.Pow(imageEnd.Y - imageStart.Y, 2));
                 dragging = false;
                 DrawLineInt(image, imageStart.X, imageEnd.X, imageStart.Y, imageEnd.Y);
                 // normalize start and end points
@@ -1689,12 +1693,34 @@ namespace IPLab
 
         #region Kosala
 
-        private int getVariationofDepth()
+        private double getVariationofDepth()
         {
-            List<int> depths = getLengthToBorder();
-            int x = 0;
-            x++;
-            return 0;
+            List<int> depths = getAllDepthsToBorder();
+            double variance = Variance(depths, Mean(depths));
+            MessageBox.Show(this, variance.ToString());
+            return variance;
+        }
+
+        public static double Variance(List<int> values, double mean)
+        {
+            double variance = 0;
+
+            for (int i = 0; i < values.Count; i++)
+            {
+                variance += Math.Pow((values[i] - mean), 2);
+            }
+
+            //int n = end - start;
+            //if (start > 0) n -= 1;
+
+            return variance / values.Count;
+        }
+
+        public static double Mean(List<int> values)
+        {
+            double s = values.Sum();
+
+            return s / values.Count;
         }
 
         private List<int> getLengthToBorder()
@@ -1724,6 +1750,30 @@ namespace IPLab
             return lengths;
         }
 
+        private List<int> getAllDepthsToBorder()
+        {
+            List<int> depths = new List<int>();
+            int length = (int)lineLength;
+            Color referenceColor = image.GetPixel(LineStart.X, LineStart.Y);
+            for (int i = LineStart.X; i < (LineStart.X + length); i++)
+            {
+                int count = 0;
+                for (int j = LineStart.Y; j >= 0; j--)
+                {
+                    if (referenceColor == image.GetPixel(i, j))
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                depths.Add(count);
+            }
+            return depths;
+        }
+
         private int getYvalueofLine()
         {
             int y = 0;
@@ -1736,6 +1786,24 @@ namespace IPLab
                 }
             }
             return y;
+        }
+
+        private Point getLineStartPoint()
+        {
+            Point point = new Point(0, 0);
+            for (int i = 0; i < image.Height; i++)
+            {
+                for (int j = 0; j < image.Width; j++)
+                {
+                    if (rgbIsInRange(image.GetPixel(j, i), Color.Red, 20))
+                    {
+                        point = new Point(j, i);
+                        return point;
+                    }
+                }
+            }
+
+            return point;
         }
 
         /// <summary>
@@ -1768,6 +1836,8 @@ namespace IPLab
             }
             UpdateNewImage();
             RotateImageBiCUbic(getAngleofLine() * 180 / Math.PI);
+            LineStart = getLineStartPoint();
+
         }
 
         private double getAngleofLine()
@@ -2080,6 +2150,9 @@ namespace IPLab
 
         private void ImageDoc_MouseClick(object sender, MouseEventArgs e)
         {
+            Point imagePoint, nothing;
+            GetImageAndScreenPoints(new Point(e.X, e.Y), out imagePoint, out nothing);
+            MessageBox.Show(imagePoint.ToString() + "       " + LineStart.ToString() + "       " + lineLength.ToString());
         }
 
     }
