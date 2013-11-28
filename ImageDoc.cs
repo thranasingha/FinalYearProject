@@ -101,7 +101,7 @@ namespace IPLab
         private MenuItem verificationMenu;
         private MenuItem checkerboardMenu;
         private MenuItem dytheringMenu;
-        private MenuItem edgeVerianceMenu;
+        private MenuItem edgeVerienceMenu;
         //public string dytheringValue;
         //public string edgeaVerienceValue;
 
@@ -248,21 +248,16 @@ namespace IPLab
             this.FilterItem = new System.Windows.Forms.MenuItem();
             this.thresholdingSegment = new System.Windows.Forms.MenuItem();
             this.edgeSegment = new System.Windows.Forms.MenuItem();
-           
             this.resxultsMenu = new System.Windows.Forms.MenuItem();
-            
+            this.csvResult = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
-            
-            this.csvResult = new System.Windows.Forms.MenuItem();
             this.verificationMenu = new System.Windows.Forms.MenuItem();
             this.checkerboardMenu = new System.Windows.Forms.MenuItem();
             this.dytheringMenu = new System.Windows.Forms.MenuItem();
-            this.edgeVerianceMenu = new System.Windows.Forms.MenuItem();
-
-            this.edgeVerianceMenu = new System.Windows.Forms.MenuItem();
+            this.edgeVerienceMenu = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -272,7 +267,6 @@ namespace IPLab
             this.filtersItem,
             this.FilterItem,
             this.resxultsMenu,
-            
             this.menuItem1,
             this.verificationMenu});
             // 
@@ -527,7 +521,6 @@ namespace IPLab
             this.FilterItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.thresholdingSegment,
             this.edgeSegment});
-
             this.FilterItem.MergeOrder = 1;
             this.FilterItem.Text = "Segment";
             // 
@@ -557,35 +550,9 @@ namespace IPLab
             this.csvResult.Text = "Generate CSV";
             this.csvResult.Click += new System.EventHandler(this.susanCometItem_Click);
             // 
-            // verificationMenu
-            // 
-            this.verificationMenu.Index = 4;
-            this.verificationMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.checkerboardMenu,
-            this.dytheringMenu,
-            this.edgeVerianceMenu});
-            this.verificationMenu.MergeOrder = 3;
-            this.verificationMenu.Text = "Verification";
-            // 
-            // checkerboardMenu
-            // 
-            this.checkerboardMenu.Index = 0;
-            this.checkerboardMenu.Text = "Checkerboard";
-            this.checkerboardMenu.Click += new System.EventHandler(this.checkerboardMenu_Click);
-            // 
-            // dytheringMenu
-            // 
-            this.dytheringMenu.Index = 1;
-            this.dytheringMenu.Text = "Dythering";
-            // 
-            // edgeVerianceMenu
-            // 
-            this.edgeVerianceMenu.Index = 2;
-            this.edgeVerianceMenu.Text = "Edge Veriance";
-            // 
             // menuItem1
             // 
-            this.menuItem1.Index = 3;
+            this.menuItem1.Index = 4;
             this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem2,
             this.menuItem4,
@@ -609,6 +576,32 @@ namespace IPLab
             this.menuItem9.Index = 2;
             this.menuItem9.Text = "Pixel Value";
             this.menuItem9.Click += new System.EventHandler(this.menuItem9_Click);
+            // 
+            // verificationMenu
+            // 
+            this.verificationMenu.Index = 5;
+            this.verificationMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.checkerboardMenu,
+            this.dytheringMenu,
+            this.edgeVerienceMenu});
+            this.verificationMenu.MergeOrder = 3;
+            this.verificationMenu.Text = "Verification";
+            // 
+            // checkerboardMenu
+            // 
+            this.checkerboardMenu.Index = 0;
+            this.checkerboardMenu.Text = "Checkerboard";
+            this.checkerboardMenu.Click += new System.EventHandler(this.checkerboardMenu_Click);
+            // 
+            // dytheringMenu
+            // 
+            this.dytheringMenu.Index = 1;
+            this.dytheringMenu.Text = "Dythering";
+            // 
+            // edgeVerienceMenu
+            // 
+            this.edgeVerienceMenu.Index = 2;
+            this.edgeVerienceMenu.Text = "Edge Verience";
             // 
             // ImageDoc
             // 
