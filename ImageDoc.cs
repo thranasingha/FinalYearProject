@@ -17,6 +17,7 @@ using AForge.Imaging;
 using AForge.Imaging.Filters;
 using AForge.Imaging.Textures;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace IPLab
 {
@@ -85,6 +86,7 @@ namespace IPLab
         private MenuItem FilterItem;
         private MenuItem thresholdingSegment;
         private MenuItem edgeSegment;
+
         private System.ComponentModel.IContainer components;
 
         #endregion
@@ -92,6 +94,16 @@ namespace IPLab
         private MenuItem menuItem2;
         private MenuItem menuItem4;
         private MenuItem menuItem9;
+        private MenuItem resxultsMenu;
+        private MenuItem csvResult;
+
+        public string checkerBoardValue;
+        private MenuItem verificationMenu;
+        private MenuItem checkerboardMenu;
+        private MenuItem dytheringMenu;
+        private MenuItem edgeVerianceMenu;
+        //public string dytheringValue;
+        //public string edgeaVerienceValue;
 
         // Image property
         public Bitmap Image
@@ -236,10 +248,21 @@ namespace IPLab
             this.FilterItem = new System.Windows.Forms.MenuItem();
             this.thresholdingSegment = new System.Windows.Forms.MenuItem();
             this.edgeSegment = new System.Windows.Forms.MenuItem();
+           
+            this.resxultsMenu = new System.Windows.Forms.MenuItem();
+            
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
+            
+            this.csvResult = new System.Windows.Forms.MenuItem();
+            this.verificationMenu = new System.Windows.Forms.MenuItem();
+            this.checkerboardMenu = new System.Windows.Forms.MenuItem();
+            this.dytheringMenu = new System.Windows.Forms.MenuItem();
+            this.edgeVerianceMenu = new System.Windows.Forms.MenuItem();
+
+            this.edgeVerianceMenu = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -248,7 +271,10 @@ namespace IPLab
             this.imageItem,
             this.filtersItem,
             this.FilterItem,
-            this.menuItem1});
+            this.resxultsMenu,
+            
+            this.menuItem1,
+            this.verificationMenu});
             // 
             // imageItem
             // 
@@ -501,6 +527,7 @@ namespace IPLab
             this.FilterItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.thresholdingSegment,
             this.edgeSegment});
+
             this.FilterItem.MergeOrder = 1;
             this.FilterItem.Text = "Segment";
             // 
@@ -515,6 +542,46 @@ namespace IPLab
             this.edgeSegment.Index = 1;
             this.edgeSegment.Text = "By Edges";
             this.edgeSegment.Click += new System.EventHandler(this.edgeSegment_Click);
+            // 
+            // resxultsMenu
+            // 
+            this.resxultsMenu.Index = 3;
+            this.resxultsMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.csvResult});
+            this.resxultsMenu.MergeOrder = 3;
+            this.resxultsMenu.Text = "Results";
+            // 
+            // csvResult
+            // 
+            this.csvResult.Index = 0;
+            this.csvResult.Text = "Generate CSV";
+            this.csvResult.Click += new System.EventHandler(this.susanCometItem_Click);
+            // 
+            // verificationMenu
+            // 
+            this.verificationMenu.Index = 4;
+            this.verificationMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.checkerboardMenu,
+            this.dytheringMenu,
+            this.edgeVerianceMenu});
+            this.verificationMenu.MergeOrder = 3;
+            this.verificationMenu.Text = "Verification";
+            // 
+            // checkerboardMenu
+            // 
+            this.checkerboardMenu.Index = 0;
+            this.checkerboardMenu.Text = "Checkerboard";
+            this.checkerboardMenu.Click += new System.EventHandler(this.checkerboardMenu_Click);
+            // 
+            // dytheringMenu
+            // 
+            this.dytheringMenu.Index = 1;
+            this.dytheringMenu.Text = "Dythering";
+            // 
+            // edgeVerianceMenu
+            // 
+            this.edgeVerianceMenu.Index = 2;
+            this.edgeVerianceMenu.Text = "Edge Veriance";
             // 
             // menuItem1
             // 
@@ -2131,10 +2198,19 @@ namespace IPLab
             }
         }
 
+        /// <summary>
+        /// Gets the list of cornes
+        /// <param name="threshold">The threshold.</param>
+        private void susanCometItem_Click(object sender, EventArgs e)
+        {
+            ResultForm form = new ResultForm();
+            form.ShowDialog();
+        }
+        
 
         #endregion
 
-        private void menuItem2_Click(object sender, EventArgs e)
+ private void menuItem2_Click(object sender, EventArgs e)
         {
             drawingLine = true;
         }
@@ -2155,6 +2231,31 @@ namespace IPLab
             MessageBox.Show(imagePoint.ToString() + "       " + LineStart.ToString() + "       " + lineLength.ToString());
         }
 
+
+   
+        /// <summary>
+        /// Save the item to the checkerboard result file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void checkerboardMenu_Click(object sender, EventArgs e)
+        {
+            ImageStatistics stat = (image == null) ? null : new ImageStatistics(image);
+
+            Bitmap map = AForge.Imaging.Image.Clone(image);
+            SusanCornersDetector cnrDetector = new SusanCornersDetector();
+            cnrDetector.ProcessImage(AForge.Imaging.Filters.NewGrayscale.CommonAlgorithms.BT709.Apply(map));
+            List<AForgeService.IntPoint> corners = cnrDetector.ProcessImage(image);
+
+            double temp = ((float)corners.Count * 100) / (float)stat.PixelsCountWithoutBlack;
+
+            //get main form for work
+            MainForm mainForm = this.TopLevelControl as MainForm;
+            mainForm.saveCheckerboarddTxt(temp.ToString());
+        }
+
+
+      
     }
 
     // Selection arguments

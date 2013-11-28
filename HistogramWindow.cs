@@ -8,6 +8,7 @@ using WeifenLuo.WinFormsUI;
 
 using AForge.Math;
 using AForge.Imaging;
+using System.Collections.Generic;
 
 namespace IPLab
 {
@@ -128,13 +129,13 @@ namespace IPLab
             // 
             this.label2.Location = new System.Drawing.Point(5, 195);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(37, 12);
+            this.label2.Size = new System.Drawing.Size(39, 21);
             this.label2.TabIndex = 4;
             this.label2.Text = "Mean:";
             // 
             // meanLabel
             // 
-            this.meanLabel.Location = new System.Drawing.Point(50, 195);
+            this.meanLabel.Location = new System.Drawing.Point(50, 197);
             this.meanLabel.Name = "meanLabel";
             this.meanLabel.Size = new System.Drawing.Size(40, 14);
             this.meanLabel.TabIndex = 5;
@@ -142,15 +143,15 @@ namespace IPLab
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(5, 215);
+            this.label3.Location = new System.Drawing.Point(5, 216);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 12);
+            this.label3.Size = new System.Drawing.Size(51, 21);
             this.label3.TabIndex = 6;
             this.label3.Text = "Std Dev:";
             // 
             // stdDevLabel
             // 
-            this.stdDevLabel.Location = new System.Drawing.Point(50, 215);
+            this.stdDevLabel.Location = new System.Drawing.Point(50, 217);
             this.stdDevLabel.Name = "stdDevLabel";
             this.stdDevLabel.Size = new System.Drawing.Size(40, 14);
             this.stdDevLabel.TabIndex = 7;
@@ -158,15 +159,15 @@ namespace IPLab
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(5, 235);
+            this.label4.Location = new System.Drawing.Point(5, 237);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(47, 12);
+            this.label4.Size = new System.Drawing.Size(51, 22);
             this.label4.TabIndex = 8;
             this.label4.Text = "Median:";
             // 
             // medianLabel
             // 
-            this.medianLabel.Location = new System.Drawing.Point(50, 235);
+            this.medianLabel.Location = new System.Drawing.Point(50, 239);
             this.medianLabel.Name = "medianLabel";
             this.medianLabel.Size = new System.Drawing.Size(40, 14);
             this.medianLabel.TabIndex = 9;
@@ -219,7 +220,7 @@ namespace IPLab
             // 
             // label8
             // 
-            this.label8.Location = new System.Drawing.Point(5, 255);
+            this.label8.Location = new System.Drawing.Point(5, 260);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(30, 14);
             this.label8.TabIndex = 16;
@@ -227,7 +228,7 @@ namespace IPLab
             // 
             // label9
             // 
-            this.label9.Location = new System.Drawing.Point(5, 275);
+            this.label9.Location = new System.Drawing.Point(5, 281);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(30, 14);
             this.label9.TabIndex = 17;
@@ -235,7 +236,7 @@ namespace IPLab
             // 
             // minLabel
             // 
-            this.minLabel.Location = new System.Drawing.Point(50, 255);
+            this.minLabel.Location = new System.Drawing.Point(50, 262);
             this.minLabel.Name = "minLabel";
             this.minLabel.Size = new System.Drawing.Size(40, 14);
             this.minLabel.TabIndex = 18;
@@ -243,7 +244,7 @@ namespace IPLab
             // 
             // maxLabel
             // 
-            this.maxLabel.Location = new System.Drawing.Point(50, 275);
+            this.maxLabel.Location = new System.Drawing.Point(50, 282);
             this.maxLabel.Name = "maxLabel";
             this.maxLabel.Size = new System.Drawing.Size(40, 14);
             this.maxLabel.TabIndex = 19;
@@ -320,6 +321,7 @@ namespace IPLab
             // get statistics
             stat = ( image == null ) ? null : new ImageStatistics( image );
             
+            
 
             // free
             Cursor = Cursors.Arrow;
@@ -331,6 +333,10 @@ namespace IPLab
 
             if ( stat != null )
             {
+                //corner details
+                Bitmap map = AForge.Imaging.Image.Clone(image);
+                
+
                 if ( !stat.IsGrayscale )
                 {
                     // RGB picture
@@ -343,6 +349,7 @@ namespace IPLab
                     channelCombo.Items.Add( "Gray" );
                 }
                 channelCombo.SelectedIndex = 0;
+                
             }
             else
             {

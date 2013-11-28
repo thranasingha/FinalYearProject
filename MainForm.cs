@@ -730,6 +730,67 @@ namespace IPLab
 			return null;
 		}
 
+        //save dythering image result
+        public void saveDytheringTxt(string result)
+        {
+            this.saveDytheringDetails(result);
+        }
+
+        //save checkerboard image result
+        public void saveCheckerboarddTxt(string result)
+        {
+            this.saveCheckerboardDetails(result);
+        }
+
+        //save edge veriance image result
+        public void saveEdgeverienceTxt(string result)
+        {
+            this.saveEdgeVerienceDetails(result);
+        }
+
+        //read the files and give it as the result
+        public string[] getImageAnalyse()
+        {
+            string[] retVal = new string[4];
+            Content doc = dockManager.ActiveDocument;
+            retVal[0] = Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName);
+            try
+            {
+                if (File.Exists(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_checkerboard.txt"))
+                {
+                    using (StreamReader sr = new StreamReader(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_checkerboard.txt"))
+                    {
+                        String line = sr.ReadLine();
+                        retVal[1] = line;
+                    }
+                }
+
+                if (File.Exists(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_dythering.txt"))
+                {
+                    using (StreamReader sr = new StreamReader(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_dythering.txt"))
+                    {
+                        String line = sr.ReadLine();
+                        retVal[2] = line;
+                    }
+                }
+
+                if (File.Exists(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_edgeverience.txt"))
+                {
+                    using (StreamReader sr = new StreamReader(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_edgeverience.txt"))
+                    {
+                        String line = sr.ReadLine();
+                        retVal[3] = line;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "Fail to read a text", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return retVal;
+        }
+
 		#endregion
 
 		// On form closing
@@ -1002,6 +1063,90 @@ namespace IPLab
 				}
 			}
 		}
+
+        //Save the dythering file
+        private void saveDytheringDetails(string result)
+        {
+            Content doc = dockManager.ActiveDocument;
+
+            if (doc != null)
+            {
+                // set initial file name
+                string fileName = Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_dythering.txt";
+                
+                // save the File
+                try
+                {
+                    FileInfo file = new FileInfo(@fileName);
+                    using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
+                    {
+                        txtWriter.Write(result);
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show(this, "Fail to save the text", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                
+            }
+        }
+
+        //Save the checkerboard file
+        private void saveCheckerboardDetails(string result)
+        {
+            Content doc = dockManager.ActiveDocument;
+
+            if (doc != null)
+            {
+                // set initial file name
+                string fileName = Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_checkerboard.txt";
+
+                // save the File
+                try
+                {
+                    FileInfo file = new FileInfo(@fileName);
+                    using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
+                    {
+                        txtWriter.Write(result);
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show(this, "Fail to save the text", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            }
+        }
+
+        //Save the edge verience file
+        private void saveEdgeVerienceDetails(string result)
+        {
+            Content doc = dockManager.ActiveDocument;
+
+            if (doc != null)
+            {
+                // set initial file name
+                string fileName = Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_edgeverience.txt";
+
+                // save the File
+                try
+                {
+                    FileInfo file = new FileInfo(@fileName);
+                    using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
+                    {
+                        txtWriter.Write(result);
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show(this, "Fail to save the text", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            }
+        }
 
 		// On "File->Save" - save the file
 		private void saveFileItem_Click(object sender, System.EventArgs e)

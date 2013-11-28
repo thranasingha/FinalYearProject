@@ -56,7 +56,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
@@ -95,6 +95,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>References\DockingToolbar.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="SourceGrid2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=ad929b4064585aea, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>References\SourceGrid2.dll</HintPath>
@@ -112,6 +114,7 @@
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
@@ -145,6 +148,8 @@
     <Compile Include="Controls\HuePicker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DataClass\DataTableExtensions.cs" />
+    <Compile Include="DataClass\ReportData.cs" />
     <Compile Include="Filters Forms\ResizeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,6 +176,26 @@
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewAforgeServices\BaseClasses\BaseFilter.cs" />
+    <Compile Include="NewAforgeServices\BaseClasses\IFilter.cs" />
+    <Compile Include="NewAforgeServices\BaseClasses\IFilterInformation.cs" />
+    <Compile Include="NewAforgeServices\Service\Grayscale.cs" />
+    <Compile Include="NewAforgeServices\Service\ColorConverter.cs" />
+    <Compile Include="NewAforgeServices\Service\DoublePoint.cs" />
+    <Compile Include="NewAforgeServices\Service\Exceptions.cs" />
+    <Compile Include="NewAforgeServices\Service\IntPoint.cs" />
+    <Compile Include="NewAforgeServices\BaseClasses\ICornersDetector.cs" />
+    <Compile Include="NewAforgeServices\Service\MoravecCornersDetector.cs" />
+    <Compile Include="NewAforgeServices\Service\Point.cs" />
+    <Compile Include="NewAforgeServices\Service\SusanCornersDetector.cs" />
+    <Compile Include="NewAforgeServices\Service\SystemTools.cs" />
+    <Compile Include="NewAforgeServices\Service\UnmanagedImage.cs" />
+    <Compile Include="ResultForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResultForm.Designer.cs">
+      <DependentUpon>ResultForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SelectImageForm.cs">
       <SubType>Form</SubType>
@@ -232,6 +257,9 @@
     <EmbeddedResource Include="Resources\arrow.bmp" />
     <EmbeddedResource Include="Resources\harrow.cur" />
     <EmbeddedResource Include="Resources\hmove.cur" />
+    <EmbeddedResource Include="ResultForm.resx">
+      <DependentUpon>ResultForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SelectImageForm.resx">
       <DependentUpon>SelectImageForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -243,6 +271,9 @@
     <None Include="Copyright.txt" />
     <None Include="History.txt" />
     <None Include="Version.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
