@@ -1758,7 +1758,29 @@ namespace IPLab
             List<int> depths = getAllDepthsToBorder();
             double variance = Variance(depths, Mean(depths));
             MessageBox.Show(this, variance.ToString());
+            writeResult(variance, "BubbleJet");
             return variance;
+        }
+
+        private void writeResult(double result, string type)
+        {
+            string path = type + ".txt";
+            if (!File.Exists(path))
+            {
+                // Create a file to write to. 
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    sw.WriteLine(result);
+                }
+            }
+
+            // This text is always added, making the file longer over time 
+            // if it is not deleted. 
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine(result);
+            }	
+
         }
 
         public static double Variance(List<int> values, double mean)
