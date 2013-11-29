@@ -1078,9 +1078,19 @@ namespace IPLab
                 try
                 {
                     FileInfo file = new FileInfo(@fileName);
-                    using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
+                    if (file.Exists)
                     {
-                        txtWriter.Write(result);
+                        using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
+                        {
+                            txtWriter.Write(result);
+                        }
+                    }
+                    else
+                    {
+                        using (System.IO.StreamWriter txtWriter = new System.IO.StreamWriter(@fileName))
+                        {
+                            txtWriter.Write(result);
+                        }
                     }
                 }
                 catch (Exception)
@@ -1106,9 +1116,19 @@ namespace IPLab
                 try
                 {
                     FileInfo file = new FileInfo(@fileName);
-                    using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
+                    if (file.Exists)
                     {
-                        txtWriter.Write(result);
+                        using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
+                        {
+                            txtWriter.Write(result);
+                        }
+                    }
+                    else
+                    {
+                        using (System.IO.StreamWriter txtWriter = new System.IO.StreamWriter(@fileName))
+                        {
+                            txtWriter.Write(result);
+                        }
                     }
                 }
                 catch (Exception)
@@ -1134,9 +1154,19 @@ namespace IPLab
                 try
                 {
                     FileInfo file = new FileInfo(@fileName);
-                    using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
+                    if (file.Exists)
                     {
-                        txtWriter.Write(result);
+                        using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
+                        {
+                            txtWriter.Write(result);
+                        }
+                    }
+                    else
+                    {
+                        using (System.IO.StreamWriter txtWriter = new System.IO.StreamWriter(@fileName))
+                        {
+                            txtWriter.Write(result);
+                        }
                     }
                 }
                 catch (Exception)
