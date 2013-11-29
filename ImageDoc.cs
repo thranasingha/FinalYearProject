@@ -2253,8 +2253,6 @@ namespace IPLab
             //MessageBox.Show(imagePoint.ToString() + "       " + LineStart.ToString() + "       " + lineLength.ToString());
         }
 
-
-
         /// <summary>
         /// Save the item to the checkerboard result file
         /// </summary>
