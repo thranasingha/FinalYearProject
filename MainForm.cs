@@ -89,6 +89,9 @@ namespace IPLab
 		private System.Windows.Forms.PrintDialog printDialog;
         private System.Windows.Forms.StatusBarPanel ycbcrPanel;
         private MenuItem menuItem1;
+        private ToolBar uniformCropToolbar;
+        private ToolBarButton cropdone;
+        private ToolBarButton cropcancel;
 		private System.ComponentModel.IContainer components;
 
 		public MainForm()
@@ -115,6 +118,12 @@ namespace IPLab
 			imageToolBar.Text = "Image Tool Bar";
 			holder = toolBarManager.AddControl(imageToolBar);
 			holder.AllowedBorders = AllowedBorders.Top | AllowedBorders.Left | AllowedBorders.Right;
+
+            // uniform crop toolbar
+            uniformCropToolbar.Text = "Uniform Crop Tool Bar";
+            uniformCropToolbar.Visible = false;
+            holder = toolBarManager.AddControl(uniformCropToolbar);
+            holder.AllowedBorders = AllowedBorders.Top | AllowedBorders.Left | AllowedBorders.Right;
 
 			histogramWin.DockStateChanged += new EventHandler(histogram_DockStateChanged);
 			statisticsWin.DockStateChanged += new EventHandler(statistics_DockStateChanged);
@@ -157,6 +166,7 @@ namespace IPLab
             this.closeAllFileItem = new System.Windows.Forms.MenuItem();
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.exitFileItem = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.viewItem = new System.Windows.Forms.MenuItem();
             this.mainBarViewItem = new System.Windows.Forms.MenuItem();
             this.imageBarViewItem = new System.Windows.Forms.MenuItem();
@@ -199,7 +209,9 @@ namespace IPLab
             this.printPreviewDialog = new System.Windows.Forms.PrintPreviewDialog();
             this.pageSetupDialog = new System.Windows.Forms.PageSetupDialog();
             this.printDialog = new System.Windows.Forms.PrintDialog();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.uniformCropToolbar = new System.Windows.Forms.ToolBar();
+            this.cropdone = new System.Windows.Forms.ToolBarButton();
+            this.cropcancel = new System.Windows.Forms.ToolBarButton();
             ((System.ComponentModel.ISupportInitialize)(this.zoomPanel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sizePanel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.selectionPanel)).BeginInit();
@@ -282,6 +294,12 @@ namespace IPLab
             this.exitFileItem.Index = 7;
             this.exitFileItem.Text = "E&xit";
             this.exitFileItem.Click += new System.EventHandler(this.exitFileItem_Click);
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 8;
+            this.menuItem1.Text = "Line";
+            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
             // 
             // viewItem
             // 
@@ -427,6 +445,7 @@ namespace IPLab
             // dockManager
             // 
             this.dockManager.ActiveAutoHideContent = null;
+            this.dockManager.Controls.Add(this.uniformCropToolbar);
             this.dockManager.Controls.Add(this.mainToolBar);
             this.dockManager.Controls.Add(this.imageToolBar);
             this.dockManager.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -578,12 +597,14 @@ namespace IPLab
             this.imageList2.Images.SetKeyName(12, "");
             this.imageList2.Images.SetKeyName(13, "");
             this.imageList2.Images.SetKeyName(14, "");
+            this.imageList2.Images.SetKeyName(15, "120px-Saint_Andrew\'s_cross_black.svg.png");
+            this.imageList2.Images.SetKeyName(16, "black-check-mark-hi.png");
             // 
             // ofd
             // 
             this.ofd.Filter = "Image files (*.jpg,*.png,*.tif,*.bmp,*.gif)|*.jpg;*.png;*.tif;*.bmp;*.gif|JPG fil" +
-    "es (*.jpg)|*.jpg|PNG files (*.png)|*.png|TIF files (*.tif)|*.tif|BMP files (*.bm" +
-    "p)|*.bmp|GIF files (*.gif)|*.gif";
+                "es (*.jpg)|*.jpg|PNG files (*.png)|*.png|TIF files (*.tif)|*.tif|BMP files (*.bm" +
+                "p)|*.bmp|GIF files (*.gif)|*.gif";
             this.ofd.Title = "Open image";
             // 
             // sfd
@@ -605,11 +626,32 @@ namespace IPLab
             this.printPreviewDialog.Name = "printPreviewDialog";
             this.printPreviewDialog.Visible = false;
             // 
-            // menuItem1
+            // uniformCropToolbar
             // 
-            this.menuItem1.Index = 8;
-            this.menuItem1.Text = "Line";
-            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
+            this.uniformCropToolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            this.uniformCropToolbar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+            this.cropdone,
+            this.cropcancel});
+            this.uniformCropToolbar.Divider = false;
+            this.uniformCropToolbar.Dock = System.Windows.Forms.DockStyle.None;
+            this.uniformCropToolbar.DropDownArrows = true;
+            this.uniformCropToolbar.ImageList = this.imageList2;
+            this.uniformCropToolbar.Location = new System.Drawing.Point(398, 83);
+            this.uniformCropToolbar.Name = "uniformCropToolbar";
+            this.uniformCropToolbar.ShowToolTips = true;
+            this.uniformCropToolbar.Size = new System.Drawing.Size(24, 48);
+            this.uniformCropToolbar.TabIndex = 5;
+            this.uniformCropToolbar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.uniformCropToolbar_ButtonClick);
+            // 
+            // cropdone
+            // 
+            this.cropdone.ImageIndex = 16;
+            this.cropdone.Name = "cropdone";
+            // 
+            // cropcancel
+            // 
+            this.cropcancel.ImageIndex = 15;
+            this.cropcancel.Name = "cropcancel";
             // 
             // MainForm
             // 
@@ -731,9 +773,9 @@ namespace IPLab
 		}
 
         //save dythering image result
-        public void saveDytheringTxt(string result)
+        public void saveDitheringTxt(string result)
         {
-            this.saveDytheringDetails(result);
+            this.saveDitheringDetails(result);
         }
 
         //save checkerboard image result
@@ -1065,7 +1107,7 @@ namespace IPLab
 		}
 
         //Save the dythering file
-        private void saveDytheringDetails(string result)
+        private void saveDitheringDetails(string result)
         {
             Content doc = dockManager.ActiveDocument;
 
@@ -1077,21 +1119,12 @@ namespace IPLab
                 // save the File
                 try
                 {
-                    FileInfo file = new FileInfo(@fileName);
-                    if (file.Exists)
+                    //FileInfo file = new FileInfo(@fileName);                    
+                    using (System.IO.StreamWriter txtWriter = new System.IO.StreamWriter(@fileName,true))
                     {
-                        using (TextWriter txtWriter = new StreamWriter(file.Open(FileMode.Truncate)))
-                        {
-                            txtWriter.Write(result);
-                        }
+                        txtWriter.WriteLine(result);
                     }
-                    else
-                    {
-                        using (System.IO.StreamWriter txtWriter = new System.IO.StreamWriter(@fileName))
-                        {
-                            txtWriter.Write(result);
-                        }
-                    }
+                    
                 }
                 catch (Exception)
                 {
@@ -1675,6 +1708,59 @@ namespace IPLab
         private void menuItem1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void uniformCropToolbar_ButtonClick(object sender, ToolBarButtonClickEventArgs e)
+        {
+            Content doc = dockManager.ActiveDocument;
+            ImageDoc imgDoc = (doc is ImageDoc) ? (ImageDoc)doc : null;
+
+
+            switch (e.Button.ImageIndex)
+            {
+                case 16:		// Crop done
+                    updateUniformCropDone(imgDoc);
+                    break;
+                case 15:		// Crop cancel  
+                    updateUniformCropCancel(imgDoc);
+                    break;
+            }
+        }
+
+        private void updateUniformCropCancel(ImageDoc imageDoc)
+        {
+            if (imageDoc != null)
+            {
+                imageDoc.UniformCropCancel();
+            }
+        }
+
+        private void updateUniformCropDone(ImageDoc imageDoc)
+        {
+            if (imageDoc != null)
+            {
+                imageDoc.UniformCropDone();
+            }
+        }
+
+        public void disableToolbars()
+        {
+            this.imageToolBar.Enabled = false;
+        }
+
+        public void enableToolbars()
+        {
+            this.imageToolBar.Enabled = true;
+        }
+
+        public void visibleTrueToolbars()
+        {
+            this.uniformCropToolbar.Visible = true;
+        }
+
+        public void visibleFalseToolbars()
+        {
+            this.uniformCropToolbar.Visible = false;
         }
 		
 	}

@@ -104,6 +104,13 @@ namespace IPLab
         //public string dytheringValue;
         //public string edgeaVerienceValue;
 
+        //Dithering Variables
+        public System.Drawing.Bitmap ditheringImage = null;
+        private int cropCount = 0;
+        int[] colorArray1;
+        int[] colorArray2;
+        int[] colorArray3;
+
         // Image property
         public Bitmap Image
         {
@@ -587,7 +594,8 @@ namespace IPLab
             // ditheringMenu
             // 
             this.ditheringMenu.Index = 1;
-            this.ditheringMenu.Text = "Dythering";
+            this.ditheringMenu.Text = "Dithering";
+            this.ditheringMenu.Click += new System.EventHandler(this.ditheringMenu_Click);
             // 
             // edgeVerienceMenu
             // 
@@ -1582,6 +1590,29 @@ namespace IPLab
             }
         }
 
+        // Dithering - Select uniform color region the image
+        private void UniformCrop()
+        {
+            System.Drawing.Bitmap ditheringImageCheck = ditheringImage;
+            MainForm mainForm = this.TopLevelControl as MainForm;
+            //form.disableToolbars();
+            mainForm.visibleTrueToolbars();
+
+            if (!cropping)
+            {
+                // turn on
+                cropping = true;
+                this.Cursor = Cursors.Cross;
+
+            }
+            else
+            {
+                // turn off
+                cropping = false;
+                this.Cursor = Cursors.Default;
+            }
+        }
+
         // On "Image->Crop" - turn on/off cropping mode
         private void cropImageItem_Click(object sender, System.EventArgs e)
         {
@@ -2237,6 +2268,141 @@ namespace IPLab
 
         #endregion
 
+        #region Dithering
+
+        public void UniformCropDone()
+        {
+            cropCount += 1;
+            if (cropCount == 1)
+            {
+                colorArray1 = GetColorVariation();
+                WriteColorVariance(colorArray1);
+                this.image.Dispose();
+                this.image = (Bitmap)ditheringImage.Clone();
+                UpdateNewImage();
+
+                MessageBox.Show("Please select another uniform color region in the signature to verify.",
+                    "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                UniformCrop();
+            }
+
+            else if (cropCount == 2)
+            {
+                colorArray2 = GetColorVariation();
+                WriteColorVariance(colorArray2);
+                this.image.Dispose();
+                this.image = (Bitmap)ditheringImage.Clone();
+                UpdateNewImage();
+
+                MessageBox.Show("Please select another uniform color region in the signature to verify.",
+                    "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                UniformCrop();
+            }
+
+            else if (cropCount == 3)
+            {
+                colorArray3 = GetColorVariation();
+                WriteColorVariance(colorArray3);
+                this.image.Dispose();
+                this.image = (Bitmap)ditheringImage.Clone();
+                UpdateNewImage();
+
+                MessageBox.Show("Color variation report generated.",
+                    "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                cropCount = 0;
+
+                MainForm mainForm = this.TopLevelControl as MainForm;
+                mainForm.visibleFalseToolbars();
+                ditheringImage.Dispose();
+            }
+        }
+
+
+        public void WriteColorVariance(int[] pixelArray)
+        {
+            string output = "";
+
+            output += "Red Color Variance : " + pixelArray[0].ToString() + "; ";
+            output += "Green Color Variance : " + pixelArray[1].ToString() + "; ";
+            output += "Blue Color Variance : " + pixelArray[2].ToString() + ";";
+
+            MainForm mainForm = this.TopLevelControl as MainForm;
+            mainForm.saveDitheringTxt(output);
+        }
+
+        public void UniformCropCancel()
+        {
+            cropCount = 0;
+            this.image = ditheringImage;
+            MainForm mainForm = this.TopLevelControl as MainForm;
+            mainForm.visibleFalseToolbars();
+            imageItem.Enabled = true;
+            filtersItem.Enabled = true;
+        }
+
+        public int[] GetColorVariation()
+        {
+            Bitmap temp = this.image;
+            Bitmap bmap = (Bitmap)temp.Clone();
+            Color c;
+            int[] colorVarianceArray = new int[3];
+
+            int redMin = 255;
+            int redMax = 0;
+            int greenMin = 255;
+            int greenMax = 0;
+            int blueMin = 255;
+            int blueMax = 0;
+
+            for (int i = 0; i < bmap.Width; i++)
+            {
+                for (int j = 0; j < bmap.Height; j++)
+                {
+                    c = bmap.GetPixel(i, j);
+
+                    if (c.R < redMin)
+                    {
+                        redMin = c.R;
+                    }
+
+                    if (c.R > redMax)
+                    {
+                        redMax = c.R;
+                    }
+
+                    if (c.B < blueMin)
+                    {
+                        blueMin = c.B;
+                    }
+
+                    if (c.B > blueMax)
+                    {
+                        blueMax = c.B;
+                    }
+
+                    if (c.G < greenMin)
+                    {
+                        greenMin = c.G;
+                    }
+
+                    if (c.G > greenMax)
+                    {
+                        greenMax = c.G;
+                    }
+                }
+            }
+
+            colorVarianceArray[0] = redMax - redMin;
+            colorVarianceArray[1] = greenMax - greenMin;
+            colorVarianceArray[2] = blueMax - blueMin;
+
+            return colorVarianceArray;
+        }
+
+        #endregion
+
         private void menuItem2_Click(object sender, EventArgs e)
         {
             drawingLine = true;
@@ -2277,6 +2443,16 @@ namespace IPLab
             //get main form for work
             MainForm mainForm = this.TopLevelControl as MainForm;
             mainForm.saveCheckerboarddTxt(temp.ToString());
+        }
+
+        private void ditheringMenu_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Please select a uniform color region in the signature to verify.",
+                    "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            imageItem.Enabled = false;
+            filtersItem.Enabled = false;
+            ditheringImage = (Bitmap)this.image.Clone();
+            UniformCrop();
         }
 
 
