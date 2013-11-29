@@ -99,7 +99,7 @@ namespace IPLab
         public string checkerBoardValue;
         private MenuItem verificationMenu;
         private MenuItem checkerboardMenu;
-        private MenuItem dytheringMenu;
+        private MenuItem ditheringMenu;
         private MenuItem edgeVerienceMenu;
         //public string dytheringValue;
         //public string edgeaVerienceValue;
@@ -254,7 +254,7 @@ namespace IPLab
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.verificationMenu = new System.Windows.Forms.MenuItem();
             this.checkerboardMenu = new System.Windows.Forms.MenuItem();
-            this.dytheringMenu = new System.Windows.Forms.MenuItem();
+            this.ditheringMenu = new System.Windows.Forms.MenuItem();
             this.edgeVerienceMenu = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
@@ -573,7 +573,7 @@ namespace IPLab
             this.verificationMenu.Index = 5;
             this.verificationMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.checkerboardMenu,
-            this.dytheringMenu,
+            this.ditheringMenu,
             this.edgeVerienceMenu});
             this.verificationMenu.MergeOrder = 3;
             this.verificationMenu.Text = "Verification";
@@ -584,10 +584,10 @@ namespace IPLab
             this.checkerboardMenu.Text = "Checkerboard";
             this.checkerboardMenu.Click += new System.EventHandler(this.checkerboardMenu_Click);
             // 
-            // dytheringMenu
+            // ditheringMenu
             // 
-            this.dytheringMenu.Index = 1;
-            this.dytheringMenu.Text = "Dythering";
+            this.ditheringMenu.Index = 1;
+            this.ditheringMenu.Text = "Dythering";
             // 
             // edgeVerienceMenu
             // 
@@ -598,7 +598,7 @@ namespace IPLab
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(528, 397);
+            this.ClientSize = new System.Drawing.Size(528, 377);
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";
             this.Text = "Image";
