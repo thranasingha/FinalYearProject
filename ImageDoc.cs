@@ -1764,6 +1764,11 @@ namespace IPLab
             MessageBox.Show(this, "According to the analysis this signature is " + precentage + "% genuin.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="type"></param>
         private void writeResult(double result, string type)
         {
             string path = type + ".txt";
