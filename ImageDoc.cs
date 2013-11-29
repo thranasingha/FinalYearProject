@@ -1748,9 +1748,20 @@ namespace IPLab
         {
             List<int> depths = getAllDepthsToBorder();
             double variance = Variance(depths, Mean(depths));
-            MessageBox.Show(this, variance.ToString());
-            writeResult(variance, "Original");
+            //MessageBox.Show(this, variance.ToString());
+            //writeResult(variance, "LazerJet 600");
+            makeOutput(variance);
             return variance;
+        }
+
+        private void makeOutput(double varience)
+        {
+            double precentage = ((15 - varience)/14)*100;
+            if (precentage<0)
+            {
+                precentage = 0;
+            }
+            MessageBox.Show(this, "According to the analysis this signature is " + precentage + "% genuin.");
         }
 
         private void writeResult(double result, string type)
@@ -1770,7 +1781,7 @@ namespace IPLab
             using (StreamWriter sw = File.AppendText(path))
             {
                 sw.WriteLine(result);
-            }	
+            }
 
         }
 
@@ -1835,13 +1846,16 @@ namespace IPLab
                 int count = 0;
                 for (int j = LineStart.Y; j >= 0; j--)
                 {
-                    if (referenceColor == image.GetPixel(i, j))
+                    if (i < image.Width && j < image.Height)
                     {
-                        count++;
-                    }
-                    else
-                    {
-                        break;
+                        if (referenceColor == image.GetPixel(i, j))
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
                 depths.Add(count);
@@ -2214,11 +2228,11 @@ namespace IPLab
             ResultForm form = new ResultForm();
             form.ShowDialog();
         }
-        
+
 
         #endregion
 
- private void menuItem2_Click(object sender, EventArgs e)
+        private void menuItem2_Click(object sender, EventArgs e)
         {
             drawingLine = true;
         }
@@ -2240,7 +2254,7 @@ namespace IPLab
         }
 
 
-   
+
         /// <summary>
         /// Save the item to the checkerboard result file
         /// </summary>
@@ -2263,7 +2277,7 @@ namespace IPLab
         }
 
 
-      
+
     }
 
     // Selection arguments
