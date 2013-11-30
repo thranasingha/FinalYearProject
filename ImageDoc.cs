@@ -1792,8 +1792,13 @@ namespace IPLab
             {
                 precentage = 0;
             }
+            MainForm mainForm = this.TopLevelControl as MainForm;
+            mainForm.saveEdgeverienceTxt("According to the analysis this signature is " + precentage + "% genuin.");
+
             MessageBox.Show(this, "According to the analysis this signature is " + precentage + "% genuin.");
         }
+
+
 
         /// <summary>
         /// 
