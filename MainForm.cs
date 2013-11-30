@@ -795,30 +795,30 @@ namespace IPLab
         {
             string[] retVal = new string[4];
             Content doc = dockManager.ActiveDocument;
-            retVal[0] = Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName);
+            retVal[0] = Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName);
             try
             {
-                if (File.Exists(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_checkerboard.txt"))
+                if (File.Exists(Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_checkerboard.txt"))
                 {
-                    using (StreamReader sr = new StreamReader(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_checkerboard.txt"))
+                    using (StreamReader sr = new StreamReader(Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_checkerboard.txt"))
                     {
                         String line = sr.ReadLine();
                         retVal[1] = line;
                     }
                 }
 
-                if (File.Exists(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_dythering.txt"))
+                if (File.Exists(Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName)+ "_dythering.txt"))
                 {
-                    using (StreamReader sr = new StreamReader(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_dythering.txt"))
+                    using (StreamReader sr = new StreamReader(Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_dythering.txt"))
                     {
                         String line = sr.ReadLine();
                         retVal[2] = line;
                     }
                 }
 
-                if (File.Exists(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_edgeverience.txt"))
+                if (File.Exists(Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_edgeverience.txt"))
                 {
-                    using (StreamReader sr = new StreamReader(Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_edgeverience.txt"))
+                    using (StreamReader sr = new StreamReader(Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_edgeverience.txt"))
                     {
                         String line = sr.ReadLine();
                         retVal[3] = line;
