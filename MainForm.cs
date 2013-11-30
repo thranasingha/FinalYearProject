@@ -11,6 +11,7 @@ using System.IO;
 using WeifenLuo.WinFormsUI;
 using rpaulo.toolbar;
 using AForge.Imaging;
+using System.Text;
 
 namespace IPLab
 {
@@ -811,7 +812,8 @@ namespace IPLab
                 {
                     using (StreamReader sr = new StreamReader(Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileNameWithoutExtension(((ImageDoc)doc).FileName) + "_dythering.txt"))
                     {
-                        String line = sr.ReadLine();
+                        StringBuilder sb = new StringBuilder();
+                        string line = sr.ReadToEnd();
                         retVal[2] = line;
                     }
                 }

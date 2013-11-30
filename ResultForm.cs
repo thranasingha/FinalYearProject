@@ -108,8 +108,11 @@ namespace IPLab
             string[] temp = mainForm.getImageAnalyse();
             retVal.fileName = temp[0];
             retVal.checkerboard_result = string.IsNullOrEmpty(temp[1]) ? 0.0 : Double.Parse(temp[1]);
-            retVal.dythering_result = string.IsNullOrEmpty(temp[2]) ? 0.0 : Double.Parse(temp[2]);
-            retVal.edge_varience = string.IsNullOrEmpty(temp[3]) ? 0.0 : Double.Parse(temp[3]);
+            /*themiya need your attention*/
+            //retVal.dythering_result = string.IsNullOrEmpty(temp[2]) ? 0.0 : Double.Parse(temp[2]);
+
+            /*kosala need your attention*/
+            //retVal.edge_varience = string.IsNullOrEmpty(temp[3]) ? 0.0 : Double.Parse(temp[3]);
 
             for (int i = 1; i < 4; i++)
             {
