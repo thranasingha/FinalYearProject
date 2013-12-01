@@ -16,6 +16,9 @@ namespace IPLab
     {
         private List<string> detailList = new List<string>(); 
 
+        /// <summary>
+        /// generate the final report usinf metadata in the metadata file.
+        /// </summary>
         public void generateReport()
         {
             try
@@ -129,6 +132,10 @@ namespace IPLab
 
         }
 
+        /// <summary>
+        /// calculate the final result precentage.
+        /// </summary>
+        /// <returns>fnal result</returns>
         private double finalPrecentage()
         {
             double dithering = double.Parse(detailList[3]),
@@ -146,6 +153,12 @@ namespace IPLab
 
         }
         
+        /// <summary>
+        /// find a string in a wordfile and then replace it with another string
+        /// </summary>
+        /// <param name="WordApp">word apllication to be procces with</param>
+        /// <param name="findText">string that is to be replace</param>
+        /// <param name="replaceWithText">new string</param>
         private void FindAndReplace(Word.Application WordApp, object findText, object replaceWithText)
         {
             object matchCase = true;
@@ -174,6 +187,10 @@ namespace IPLab
 
         }
 
+        /// <summary>
+        /// get the result metadata drom metadata file.
+        /// </summary>
+        /// <returns>details on metadata file</returns>
         private List<string> getResultMetadataList()
         {
             if (File.Exists(Properties.Resources.workingPath + @"MetadataText.txt"))
@@ -196,7 +213,13 @@ namespace IPLab
                 return null;
             }
         }
-
+        
+        /// <summary>
+        /// get the maximum width and height of the image, so the image can fit in to the word file.
+        /// </summary>
+        /// <param name="image">image to be put to the word file</param>
+        /// <param name="height">height of the image.</param>
+        /// <returns>width of the image.</returns>
         private double getWidthAndHeight(Bitmap image, out double height)
         {
             double width = image.Width;

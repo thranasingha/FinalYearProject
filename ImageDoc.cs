@@ -1795,6 +1795,10 @@ namespace IPLab
 
         #region Kosala
 
+        /// <summary>
+        /// calculate the depth variation according to the measured depth value.
+        /// </summary>
+        /// <returns></returns>
         private double getVariationofDepth()
         {
             List<int> depths = getAllDepthsToBorder();
@@ -1805,6 +1809,10 @@ namespace IPLab
             return variance;
         }
 
+        /// <summary>
+        /// show the results in a message and write the metadata to the matadata file for final result.
+        /// </summary>
+        /// <param name="varience"></param>
         private void makeOutput(double varience)
         {
             double precentage = ((15 - varience) / 14) * 100;
@@ -1890,6 +1898,12 @@ namespace IPLab
 
         }
 
+        /// <summary>
+        /// calculate the varience of a given value list
+        /// </summary>
+        /// <param name="values">values which are to be used to calculate the varience</param>
+        /// <param name="mean">mean value of the value list</param>
+        /// <returns>varience of the value list</returns>
         public static double Variance(List<int> values, double mean)
         {
             double variance = 0;
@@ -1905,6 +1919,11 @@ namespace IPLab
             return variance / values.Count;
         }
 
+        /// <summary>
+        /// calculate the mean of a given value list
+        /// </summary>
+        /// <param name="values">list of values to be calculate the mean</param>
+        /// <returns>mean of the value list</returns>
         public static double Mean(List<int> values)
         {
             double s = values.Sum();
@@ -1941,6 +1960,10 @@ namespace IPLab
             return lengths;
         }
 
+        /// <summary>
+        /// find distance between line and the edge of the signature.
+        /// </summary>
+        /// <returns>list containing all the depth information</returns>
         private List<int> getAllDepthsToBorder()
         {
             List<int> depths = new List<int>();
@@ -1968,6 +1991,10 @@ namespace IPLab
             return depths;
         }
 
+        /// <summary>
+        /// find the y cordinate of the drawn line
+        /// </summary>
+        /// <returns>y cordinate of the drawn line</returns>
         private int getYvalueofLine()
         {
             int y = 0;
@@ -1982,6 +2009,10 @@ namespace IPLab
             return y;
         }
 
+        /// <summary>
+        /// find the x and y cordinates of starting point of the drawn line.
+        /// </summary>
+        /// <returns>starting point of the line</returns>
         private Point getLineStartPoint()
         {
             Point point = new Point(0, 0);
@@ -2019,6 +2050,14 @@ namespace IPLab
             return false;
         }
 
+        /// <summary>
+        /// draw line
+        /// </summary>
+        /// <param name="bmp">image where the line is suppose to be drawn</param>
+        /// <param name="x1">starting point x cordinates</param>
+        /// <param name="x2">end point x cordinates</param>
+        /// <param name="y1">starting point y cordinates</param>
+        /// <param name="y2">end point x cordinates</param>
         private void DrawLineInt(Bitmap bmp, int x1, int x2, int y1, int y2)
         {
             Pen blackPen = new Pen(Color.Red, 2);
@@ -2029,17 +2068,26 @@ namespace IPLab
                 graphics.DrawLine(blackPen, x1, y1, x2, y2);
             }
             UpdateNewImage();
-            RotateImageBiCUbic(getAngleofLine() * 180 / Math.PI);
+            RotateImageBilinear(getAngleofLine() * 180 / Math.PI);
             LineStart = getLineStartPoint();
 
         }
 
+        /// <summary>
+        /// calculate the angle of the line.
+        /// </summary>
+        /// <returns>angle of the line.</returns>
         private double getAngleofLine()
         {
             return Math.Atan(((imageStart.Y - imageEnd.Y) * 1.0) / (imageStart.X - imageEnd.X));
         }
 
-        private Bitmap RotateImageBiCUbic(double angle)
+        /// <summary>
+        /// rotate image using bilinear meathod
+        /// </summary>
+        /// <param name="angle">angle of the rotation</param>
+        /// <returns>rotated image.</returns>
+        private Bitmap RotateImageBilinear(double angle)
         {
             RotateBilinear rotateFilter = new RotateBilinear(angle, false);
             image = rotateFilter.Apply(image);
@@ -2068,6 +2116,11 @@ namespace IPLab
 
         }
 
+        /// <summary>
+        /// runs when the background work is end.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             pictureBox1.Visible = false;
@@ -2078,13 +2131,22 @@ namespace IPLab
         {
         }
 
+        /// <summary>
+        /// create the report in a background thread.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
             Report report = new Report();
             report.generateReport();
         }
 
-
+        /// <summary>
+        /// Draw line.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void menuItem2_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.Cross;
