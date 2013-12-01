@@ -219,7 +219,7 @@ namespace IPLab
         /// </summary>
         /// <param name="image">image to be put to the word file</param>
         /// <param name="height">height of the image.</param>
-        /// <returns>width of the image.</returns>
+        /// <returns>width of the image</returns>
         private double getWidthAndHeight(Bitmap image, out double height)
         {
             double width = image.Width;
