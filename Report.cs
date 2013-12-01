@@ -29,12 +29,11 @@ namespace IPLab
 
             }
 
-            File.Create("MetadataText");
-            if (File.Exists(@"E:\invoice.docx"))
-            {
-                File.Delete(@"E:\invoice.docx");
-            }
-            object fileName = @"E:\Document Verification Results.docx";
+            //if (File.Exists(@"E:\invoice.pdf"))
+            //{
+            //    File.Delete(@"E:\invoice.pdf");
+            //}
+            object fileName = Properties.Resources.workingPath + @"Document Verification Results.docx";
 
             //Set Missing Value parameter - used to represent
             // a missing value when calling methods through
@@ -47,6 +46,8 @@ namespace IPLab
 
             //Setup our Word.Document class we'll use.
             Word.Document aDoc = null;
+
+            List<string> metadata = getResultMetadataList();
 
             // Check to see that file exists
             if (File.Exists((string)fileName))
@@ -70,7 +71,6 @@ namespace IPLab
                 // Activate the document
                 aDoc.Activate();
 
-                List<string> metadata = getResultMetadataList();
 
                 FindAndReplace(wordApp, "<dithering1>", metadata[0]);
                 FindAndReplace(wordApp, "<dithering2>", metadata[1]);
@@ -107,10 +107,10 @@ namespace IPLab
                 MessageBox.Show("File dose not exist.");
                 return;
             }
-            object saveAs = @"E:\invoice.docx";
+            object saveAs = Properties.Resources.workingPath + @"Final_Result-" + Path.GetFileName(metadata[10]) + ".pdf";
 
             //Save the document as the correct file name.
-            aDoc.SaveAs(ref saveAs, ref missing, ref missing, ref missing,
+            aDoc.SaveAs(ref saveAs, Word.WdSaveFormat.wdFormatPDF, ref missing, ref missing,
                     ref missing, ref missing, ref missing, ref missing,
                     ref missing, ref missing, ref missing, ref missing,
                     ref missing, ref missing, ref missing, ref missing);
@@ -125,6 +125,9 @@ namespace IPLab
             //worker.ReportProgress(95);
 
         }
+
+        private void convertToPDF()
+        { }
 
         private void FindAndReplace(Word.Application WordApp, object findText, object replaceWithText)
         {
@@ -156,17 +159,17 @@ namespace IPLab
 
         private List<string> getResultMetadataList()
         {
-            if (File.Exists(@"E:\MetadataText.txt"))
+            if (File.Exists(Properties.Resources.workingPath + @"MetadataText.txt"))
             {
                 List<string> metadataList = new List<string>();
 
-                string[] lines = File.ReadAllLines(@"E:\MetadataText.txt");
+                string[] lines = File.ReadAllLines(Properties.Resources.workingPath + @"MetadataText.txt");
                 foreach (string line in lines)
                 {
                     metadataList.Add(line);
                 }
-                File.Delete(@"E:\MetadataText.txt");
-                File.Create(@"E:\MetadataText.txt");
+                File.Delete(Properties.Resources.workingPath + @"MetadataText.txt");
+                File.Create(Properties.Resources.workingPath + @"MetadataText.txt");
                 return metadataList;
             }
             else

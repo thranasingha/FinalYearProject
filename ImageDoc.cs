@@ -110,6 +110,7 @@ namespace IPLab
         int[] colorArray1;
         int[] colorArray2;
         int[] colorArray3;
+        private PictureBox pictureBox1;
 
         // Image property
         public Bitmap Image
@@ -263,6 +264,8 @@ namespace IPLab
             this.checkerboardMenu = new System.Windows.Forms.MenuItem();
             this.ditheringMenu = new System.Windows.Forms.MenuItem();
             this.edgeVerienceMenu = new System.Windows.Forms.MenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -602,11 +605,22 @@ namespace IPLab
             this.edgeVerienceMenu.Index = 2;
             this.edgeVerienceMenu.Text = "Edge Verience";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(138, 33);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(250, 250);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Visible = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
             // ImageDoc
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(528, 357);
+            this.ClientSize = new System.Drawing.Size(528, 317);
+            this.Controls.Add(this.pictureBox1);
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";
             this.Text = "Image";
@@ -615,6 +629,7 @@ namespace IPLab
             this.MouseLeave += new System.EventHandler(this.ImageDoc_MouseLeave);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageDoc_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ImageDoc_MouseUp);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1983,6 +1998,50 @@ namespace IPLab
             return image;
         }
 
+        /// <summary>
+        /// Gets the list of cornes
+        /// <param name="threshold">The threshold.</param>
+        private void susanCometItem_Click(object sender, EventArgs e)
+        {
+            //ResultForm form = new ResultForm();
+            //form.ShowDialog();
+
+            BackgroundWorker worker = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+            //todo
+            //pictureBox1.Image = 
+            pictureBox1.Visible = true;
+            this.Enabled = false;
+
+            bw.RunWorkerAsync();
+            
+        }
+
+        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            pictureBox1.Visible = false;
+            this.Enabled = true;
+        }
+
+        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+        }
+
+        private void bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Report report = new Report();
+            report.generateReport();
+        }
+
+
+        private void menuItem2_Click(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.Cross;
+            drawingLine = true;
+        }
+
         #endregion
 
         #region Tharindu Edit
@@ -2261,17 +2320,7 @@ namespace IPLab
             }
         }
 
-        /// <summary>
-        /// Gets the list of cornes
-        /// <param name="threshold">The threshold.</param>
-        private void susanCometItem_Click(object sender, EventArgs e)
-        {
-            //ResultForm form = new ResultForm();
-            //form.ShowDialog();
-
-            Report report = new Report();
-            report.generateReport();
-        }
+        
 
 
         #endregion
@@ -2411,10 +2460,6 @@ namespace IPLab
 
         #endregion
 
-        private void menuItem2_Click(object sender, EventArgs e)
-        {
-            drawingLine = true;
-        }
 
         private void menuItem4_Click(object sender, EventArgs e)
         {
@@ -2461,6 +2506,11 @@ namespace IPLab
             filtersItem.Enabled = false;
             ditheringImage = (Bitmap)this.image.Clone();
             UniformCrop();
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
 
 

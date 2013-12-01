@@ -212,6 +212,7 @@
     <Compile Include="Tools\Serialize2DimArray.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="Resources\cross_i.cur" />
     <Content Include="Resources\MetadataText.txt" />
     <EmbeddedResource Include="Controls\ColorSlider.resx">
       <DependentUpon>ColorSlider.cs</DependentUpon>

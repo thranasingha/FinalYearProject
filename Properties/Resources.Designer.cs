@@ -59,5 +59,24 @@ namespace IPLab.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] cross_i {
+            get {
+                object obj = ResourceManager.GetObject("cross_i", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E:\.
+        /// </summary>
+        internal static string workingPath {
+            get {
+                return ResourceManager.GetString("workingPath", resourceCulture);
+            }
+        }
     }
 }
