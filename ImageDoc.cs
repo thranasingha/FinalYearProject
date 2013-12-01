@@ -607,9 +607,10 @@ namespace IPLab
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Image = global::IPLab.Properties.Resources._477;
             this.pictureBox1.Location = new System.Drawing.Point(138, 33);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(250, 250);
+            this.pictureBox1.Size = new System.Drawing.Size(213, 220);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
@@ -619,7 +620,7 @@ namespace IPLab
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(528, 317);
+            this.ClientSize = new System.Drawing.Size(528, 297);
             this.Controls.Add(this.pictureBox1);
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";
@@ -2010,8 +2011,8 @@ namespace IPLab
             bw.DoWork += new DoWorkEventHandler(bw_DoWork);
             bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
-            //todo
-            //pictureBox1.Image = 
+
+
             pictureBox1.Visible = true;
             this.Enabled = false;
 
