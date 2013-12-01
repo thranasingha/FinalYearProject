@@ -606,7 +606,7 @@ namespace IPLab
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(528, 377);
+            this.ClientSize = new System.Drawing.Size(528, 357);
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";
             this.Text = "Image";
@@ -2266,8 +2266,11 @@ namespace IPLab
         /// <param name="threshold">The threshold.</param>
         private void susanCometItem_Click(object sender, EventArgs e)
         {
-            ResultForm form = new ResultForm();
-            form.ShowDialog();
+            //ResultForm form = new ResultForm();
+            //form.ShowDialog();
+
+            Report report = new Report();
+            report.generateReport();
         }
 
 
