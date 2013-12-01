@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-
+using SourceGrid2.Cells.Real;
 using WeifenLuo.WinFormsUI;
 
 using AForge;
@@ -44,6 +44,7 @@ namespace IPLab
         private Point start, end, startW, endW;
         private Point imageStart, imageEnd;
         private Point LineStart;
+        private List<string> tempMetadataList = new List<string>(); 
 
         #region form items
 
@@ -607,10 +608,12 @@ namespace IPLab
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = global::IPLab.Properties.Resources._477;
             this.pictureBox1.Location = new System.Drawing.Point(138, 33);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(213, 220);
+            this.pictureBox1.Size = new System.Drawing.Size(220, 225);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
@@ -620,11 +623,12 @@ namespace IPLab
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(528, 297);
+            this.ClientSize = new System.Drawing.Size(528, 277);
             this.Controls.Add(this.pictureBox1);
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";
             this.Text = "Image";
+            this.Load += new System.EventHandler(this.ImageDoc_Load);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ImageDoc_MouseClick);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ImageDoc_MouseDown);
             this.MouseLeave += new System.EventHandler(this.ImageDoc_MouseLeave);
@@ -1803,18 +1807,62 @@ namespace IPLab
 
         private void makeOutput(double varience)
         {
-            double precentage = ((15 - varience)/14)*100;
-            if (precentage<0)
+            double precentage = ((15 - varience) / 14) * 100;
+            if (precentage < 0)
             {
                 precentage = 0;
             }
             MainForm mainForm = this.TopLevelControl as MainForm;
             mainForm.saveEdgeverienceTxt("According to the analysis this signature is " + precentage + "% genuin.");
-
+            List<string> metadataList= new List<string>();
+            metadataList.Add(precentage.ToString());
+            writeToMetadataFile(metadataList, "edg");
             MessageBox.Show(this, "According to the analysis this signature is " + precentage + "% genuin.");
         }
 
+        /// <summary>
+        /// Use this method to store rresults of each analysis.
+        /// </summary>
+        /// <param name="metadataList">list of string containing data. last element should only contain a double value </param>
+        /// <param name="sender">who is sending the data. dit-Dithering, edg-edge analysis, che- checker board analaysis</param>
+        private void writeToMetadataFile(List<string> metadataList, string sender)
+        {
+            if (sender.Equals("dit"))
+            {
+                tempMetadataList[0] = metadataList[0];
+                tempMetadataList[1] = metadataList[1];
+                tempMetadataList[2] = metadataList[2];
+                tempMetadataList[3] = metadataList[3];
+            } else if (sender.Equals("edg"))
+            {
+                tempMetadataList[4] = metadataList[0];
+            } else if (sender.Equals("che"))
+            {
+                tempMetadataList[5] = metadataList[0];
+                tempMetadataList[6] = metadataList[1];
+                tempMetadataList[7] = metadataList[2];
+                tempMetadataList[8] = metadataList[3];
+                tempMetadataList[9] = metadataList[4];
+            }
 
+            foreach (string data in tempMetadataList)
+            {
+                if (data.Equals("null"))
+                {
+                    return;
+                }
+            }
+
+            using (StreamWriter file = new StreamWriter(Properties.Resources.workingPath + @"MetadataText.txt"))
+            {
+                foreach (string line in metadataList)
+                {
+                    file.WriteLine(line);
+                }
+            }
+
+            tempMetadataList.Clear();
+        }
 
         /// <summary>
         /// 
@@ -2017,7 +2065,7 @@ namespace IPLab
             this.Enabled = false;
 
             bw.RunWorkerAsync();
-            
+
         }
 
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -2041,6 +2089,14 @@ namespace IPLab
         {
             this.Cursor = Cursors.Cross;
             drawingLine = true;
+        }
+
+        private void ImageDoc_Load(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                tempMetadataList.Add("null");
+            }
         }
 
         #endregion
@@ -2321,7 +2377,7 @@ namespace IPLab
             }
         }
 
-        
+
 
 
         #endregion

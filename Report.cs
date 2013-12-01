@@ -14,6 +14,8 @@ namespace IPLab
 {
     class Report
     {
+        private List<string> detailList = new List<string>(); 
+
         public void generateReport()
         {
             try
@@ -81,15 +83,16 @@ namespace IPLab
                 FindAndReplace(wordApp, "<Checkerboard2>", metadata[6]);
                 FindAndReplace(wordApp, "<Checkerboard3>", metadata[7]);
                 FindAndReplace(wordApp, "<Checkerboard4>", metadata[8]);
-                FindAndReplace(wordApp, "<result>", metadata[9]);
+                FindAndReplace(wordApp, "<result>",
+                    "Overall analysis says that the signature is " + finalPrecentage() + "% genuin.");
 
-                Bitmap image = new Bitmap(metadata[10]);
+                Bitmap image = new Bitmap(metadata[9]);
                 int width, height;
                 double temp;
                 width = (int)getWidthAndHeight(image, out temp);
                 height = (int)temp;
 
-                aDoc.Shapes.AddPicture(metadata[10], ref missing, ref missing,
+                aDoc.Shapes.AddPicture(metadata[9], ref missing, ref missing,
                     ref missing, 100, width, height, ref missing);
 
                 //worker.ReportProgress(60);
@@ -107,7 +110,7 @@ namespace IPLab
                 MessageBox.Show("File dose not exist.");
                 return;
             }
-            object saveAs = Properties.Resources.workingPath + @"Final_Result-" + Path.GetFileName(metadata[10]) + ".pdf";
+            object saveAs = Properties.Resources.workingPath + @"Final_Result-" + Path.GetFileName(metadata[9]) + ".pdf";
 
             //Save the document as the correct file name.
             aDoc.SaveAs(ref saveAs, Word.WdSaveFormat.wdFormatPDF, ref missing, ref missing,
@@ -126,9 +129,23 @@ namespace IPLab
 
         }
 
-        private void convertToPDF()
-        { }
+        private double finalPrecentage()
+        {
+            double dithering = double.Parse(detailList[3]),
+                edge = double.Parse(detailList[4]),
+                check = double.Parse(detailList[8]);
 
+            if (edge>50)
+            {
+                return ((dithering*2) + edge + check)/4;
+            }
+            else
+            {
+                return ((edge*2) + dithering + check);
+            }
+
+        }
+        
         private void FindAndReplace(Word.Application WordApp, object findText, object replaceWithText)
         {
             object matchCase = true;
@@ -170,6 +187,7 @@ namespace IPLab
                 }
                 File.Delete(Properties.Resources.workingPath + @"MetadataText.txt");
                 File.Create(Properties.Resources.workingPath + @"MetadataText.txt");
+                this.detailList = metadataList;
                 return metadataList;
             }
             else
