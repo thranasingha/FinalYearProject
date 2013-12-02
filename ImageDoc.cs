@@ -2197,6 +2197,9 @@ namespace IPLab
                     }
                     else
                     {
+                        //image = newImage;
+                        createCroppedImage(map, newImage);
+
                         if (host.RememberOnChange)
                         {
                             // backup current image
@@ -2205,14 +2208,7 @@ namespace IPLab
 
                             backup = image;
                         }
-                        else
-                        {
-                            // release current image
-                            image.Dispose();
-                        }
-
-                        //image = newImage;
-                        createCroppedImage(map, newImage);
+                                                
 
                         // update
                         UpdateNewImage();
@@ -2608,6 +2604,7 @@ namespace IPLab
             Bitmap map = AForge.Imaging.Image.Clone(image);
             SusanCornersDetector cnrDetector = new SusanCornersDetector();
             cnrDetector.ProcessImage(AForge.Imaging.Filters.NewGrayscale.CommonAlgorithms.BT709.Apply(map));
+            //cnrDetector.ProcessImage(map);
             List<AForgeService.IntPoint> corners = cnrDetector.ProcessImage(image);
 
             double temp = ((float)corners.Count * 100) / (float)stat.PixelsCountWithoutBlack;
