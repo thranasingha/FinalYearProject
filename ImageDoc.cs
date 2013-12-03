@@ -556,7 +556,7 @@ namespace IPLab
             // csvResult
             // 
             this.csvResult.Index = 0;
-            this.csvResult.Text = "Generate CSV";
+            this.csvResult.Text = "Generate PDF";
             this.csvResult.Click += new System.EventHandler(this.susanCometItem_Click);
             // 
             // menuItem1
@@ -623,7 +623,7 @@ namespace IPLab
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(528, 277);
+            this.ClientSize = new System.Drawing.Size(528, 257);
             this.Controls.Add(this.pictureBox1);
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";
