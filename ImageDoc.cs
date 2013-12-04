@@ -2650,6 +2650,7 @@ namespace IPLab
             resultList.Add(values[2].ToString());
             resultList.Add(getResultValue(values));
             writeToMetadataFile(resultList,"che");
+            //finally give the message
             MessageBox.Show("Final result" + getResultValue(values),
                         "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
