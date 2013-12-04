@@ -592,6 +592,7 @@ namespace IPLab
             // checkerboardMenu
             // 
             this.checkerboardMenu.Index = 0;
+            this.checkerboardMenu.Shortcut = System.Windows.Forms.Shortcut.CtrlD;
             this.checkerboardMenu.Text = "Checkerboard";
             this.checkerboardMenu.Click += new System.EventHandler(this.checkerboardMenu_Click);
             // 
@@ -623,7 +624,7 @@ namespace IPLab
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(528, 257);
+            this.ClientSize = new System.Drawing.Size(528, 237);
             this.Controls.Add(this.pictureBox1);
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";
@@ -2618,7 +2619,7 @@ namespace IPLab
                     MessageBox.Show("Please select a value arround 180.",
                     "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-
+                Cursor.Current = Cursors.WaitCursor;
                 if (i > 1)
                 {
                     thresholdingSegment_Click(new object(), new EventArgs());
@@ -2648,11 +2649,35 @@ namespace IPLab
             resultList.Add(values[0].ToString());
             resultList.Add(values[1].ToString());
             resultList.Add(values[2].ToString());
-            resultList.Add(getResultValue(values));
+            string result = getResultValue(values);
+            resultList.Add(result);
             writeToMetadataFile(resultList,"che");
+            
             //finally give the message
             MessageBox.Show("Final result" + getResultValue(values),
                         "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            /*remove after test
+            try
+            {
+                string outFile = "C://Users//Tharindu//Desktop//Project//accuracy test//original.csv";
+
+                using (StreamWriter writer = File.AppendText(outFile))
+                {
+                    writer.WriteLine(result);
+                }
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "Fail to save the text", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+            /*end remove after test*/
         }
 
         private string getResultValue(double[] input)
@@ -2713,8 +2738,12 @@ namespace IPLab
             }
 
             //combine generated result
-            retVal = (.4 * nonThresholdPercent + .3 * Threshold150Percent + .3 * Threshold180Percent).ToString();
-
+            double result = (.4 * nonThresholdPercent + .3 * Threshold150Percent + .3 * Threshold180Percent) + 20;
+            if(result > 95)
+            {
+                result = 95;
+            }
+            retVal = (100 - result).ToString();
             return retVal;
         }
 
