@@ -130,6 +130,8 @@ namespace IPLab
 
             //worker.ReportProgress(95);
 
+            System.Diagnostics.Process.Start(Properties.Resources.workingPath + @"Final_Result-" + Path.GetFileName(metadata[9]) + ".pdf");
+
         }
 
         /// <summary>

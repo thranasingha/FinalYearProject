@@ -1793,7 +1793,7 @@ namespace IPLab
             }
         }
 
-        #region Kosala
+        #region EdgeVariation
 
         /// <summary>
         /// calculate the depth variation according to the measured depth value.
