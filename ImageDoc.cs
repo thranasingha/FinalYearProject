@@ -1837,14 +1837,17 @@ namespace IPLab
         {
             if (sender.Equals("dit"))
             {
+                //check
                 tempMetadataList[0] = metadataList[0];
                 tempMetadataList[1] = metadataList[1];
                 tempMetadataList[2] = metadataList[2];
                 tempMetadataList[3] = metadataList[3];
-            } else if (sender.Equals("edg"))
+            }
+            else if (sender.Equals("edg"))
             {
                 tempMetadataList[4] = metadataList[0];
-            } else if (sender.Equals("che"))
+            }
+            else if (sender.Equals("che"))
             {
                 tempMetadataList[5] = metadataList[0];
                 tempMetadataList[6] = metadataList[1];
@@ -1865,6 +1868,7 @@ namespace IPLab
             {
                 foreach (string line in metadataList)
                 {
+                    //file.WriteLine(line);
                     file.WriteLine(line);
                 }
             }
