@@ -134,18 +134,7 @@ namespace IPLab
             statisticsWin.VisibleChanged += new EventHandler(statistics_VisibleChanged);
 
             String wpath = Properties.Resources.workingPath;
-            if (wpath.Equals("E:\\"))
-            {
-
-                MessageBoxButtons button = MessageBoxButtons.OKCancel;
-                string caption = "Change Path";
-                String messageBoxText = "Please select a working directory except in C drive";
-                //MessageBoxImage icon = MessageBoxImage.Warning;
-
-                //MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button);
-                String res = MessageBox.Show(messageBoxText, caption, button).ToString();
-
-            }
+            
         }
 
 		/// <summary>
