@@ -2892,11 +2892,13 @@ namespace IPLab
         public void UniformCropCancel()
         {
             cropCount = 0;
+            cropping = false;
             this.image = ditheringImage;
             MainForm mainForm = this.TopLevelControl as MainForm;
             mainForm.visibleFalseToolbars();
-            imageItem.Enabled = true;
-            filtersItem.Enabled = true;
+
+            //imageItem.Enabled = true;
+            //filtersItem.Enabled = true;
         }
 
         public int[] GetColorVariation()
@@ -2985,8 +2987,8 @@ namespace IPLab
         {
             MessageBox.Show("Please select a uniform color region in the signature to verify.",
                     "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            imageItem.Enabled = false;
-            filtersItem.Enabled = false;
+            //imageItem.Enabled = false;
+            //filtersItem.Enabled = false;
             ditheringImage = (Bitmap)this.image.Clone();
             UniformCrop();
         }
