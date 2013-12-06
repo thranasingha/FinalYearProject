@@ -1071,10 +1071,6 @@ namespace IPLab
             ApplyFilter(new ChannelFiltering(new IntRange(0, 255), new IntRange(0, 255), new IntRange(0, 0)));
         }
 
-
-
-
-
         // Extract red channel of image
         private void extractRedColorFiltersItem_Click(object sender, System.EventArgs e)
         {
