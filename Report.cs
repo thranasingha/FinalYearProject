@@ -150,7 +150,7 @@ namespace IPLab
             {
                 return ((dithering*2) + edge + check)/4;
             }
-            return ((edge*2) + dithering + check);
+            return ((edge*2) + dithering + check)/4;
         }
         
         /// <summary>
