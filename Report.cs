@@ -143,7 +143,7 @@ namespace IPLab
         private double finalPrecentage()
         {
             double dithering = double.Parse(detailList[3]),
-                edge = 100 - double.Parse(detailList[4]),
+                edge = double.Parse(detailList[4]),
                 check = double.Parse(detailList[8]);
 
             if (edge<50)
