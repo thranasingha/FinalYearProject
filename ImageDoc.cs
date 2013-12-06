@@ -2626,9 +2626,9 @@ namespace IPLab
                 {
                     string penType = input.comboBox1.SelectedItem.ToString();
 
-                    int redColorVar = colorArray1[0] + colorArray2[0] + colorArray3[0];
-                    int greenColorVar = colorArray1[1] + colorArray2[1] + colorArray3[1];
-                    int blueColorVar = colorArray1[2] + colorArray2[2] + colorArray3[2];
+                    int redColorVar = (colorArray1[0] + colorArray2[0] + colorArray3[0]) / 3;
+                    int greenColorVar = (colorArray1[1] + colorArray2[1] + colorArray3[1]) / 3;
+                    int blueColorVar = (colorArray1[2] + colorArray2[2] + colorArray3[2]) / 3;
 
                     string[] dithPercentage = new string[2];
 
@@ -2744,7 +2744,7 @@ namespace IPLab
         /// <param name="totalBlueVar"> Blue color variation </param>
         public string[] BluePenCalc(int totalRedVar, int totalGreenVar, int totalBlueVar)
         {
-            double redeVar = totalRedVar / 3;
+            double redeVar = totalRedVar;
             double redPercentage = 100;
 
             if (redeVar < 76.23)
@@ -2760,7 +2760,7 @@ namespace IPLab
                 redPercentage = 8.33 + 86.67 * (redeVar - 76.23) / 44.85;
             }
 
-            double greenVar = totalBlueVar / 3;
+            double greenVar = totalBlueVar;
             double greenPercentage = 100;
 
             if (greenVar < 50.18)
@@ -2776,7 +2776,7 @@ namespace IPLab
                 greenPercentage = 6.67 + 88.33 * (greenVar - 50.18) / 46.91;
             }
 
-            double blueVar = totalBlueVar / 3;
+            double blueVar = totalBlueVar;
             double bluePercentage = 100;
 
             if (blueVar < 61.72)
@@ -2811,7 +2811,7 @@ namespace IPLab
         /// <param name="totalBlueVar"> Blue color variation </param>
         public string[] BlackPenCalc(int totalRedVar, int totalGreenVar, int totalBlueVar)
         {
-            double redeVar = totalRedVar / 3;
+            double redeVar = totalRedVar;
             double redPercentage = 100;
 
             if (redeVar < 33.999)
@@ -2827,7 +2827,7 @@ namespace IPLab
                 redPercentage = 3 + 97 * (redeVar - 33.999) / 57.461;
             }
 
-            double greenVar = totalBlueVar / 3;
+            double greenVar = totalBlueVar;
             double greenPercentage = 100;
 
             if (greenVar < 33.99)
@@ -2843,7 +2843,7 @@ namespace IPLab
                 greenPercentage = 3 + 97 * (greenVar - 33.99) / 58.75;
             }
 
-            double blueVar = totalBlueVar / 3;
+            double blueVar = totalBlueVar;
             double bluePercentage = 100;
 
             if (blueVar < 33.51)
