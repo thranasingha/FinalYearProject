@@ -61,26 +61,6 @@ namespace IPLab.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _477 {
-            get {
-                object obj = ResourceManager.GetObject("_477", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] cross_i {
-            get {
-                object obj = ResourceManager.GetObject("cross_i", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to E:\.
         /// </summary>
         internal static string workingPath {

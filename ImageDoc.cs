@@ -1813,7 +1813,7 @@ namespace IPLab
             List<string> metadataList= new List<string>();
             metadataList.Add(precentage.ToString());
             writeToMetadataFile(metadataList, "edg");
-            MessageBox.Show(this, "According to the analysis this signature is " + precentage + "% genuin.");
+            MessageBox.Show(this, "According to the analysis this signature is " + precentage + "% forged.");
         }
 
         /// <summary>
