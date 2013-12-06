@@ -2850,7 +2850,7 @@ namespace IPLab
             writeToMetadataFile(resultList,"che");
             
             //finally give the message
-            MessageBox.Show("Final result" + getResultValue(values),
+            MessageBox.Show("Percentage of analysed region could be a printed region is" + (100 - Double.Parse(getResultValue(values))).ToString(),
                         "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             /*remove after test
