@@ -1852,13 +1852,11 @@ namespace IPLab
                 }
             }
 
-            using (StreamWriter file = new StreamWriter(Properties.Resources.workingPath + @"MetadataText.txt"))
+            using (StreamWriter sw = File.AppendText(Properties.Resources.workingPath + @"MetadataText.txt"))
             {
-                foreach (string line in metadataList)
-                {
-                    //file.WriteLine(line);
-                    file.WriteLine(line);
-                }
+                sw.WriteLine("This");
+                sw.WriteLine("is Extra");
+                sw.WriteLine("Text");
             }
 
             tempMetadataList.Clear();
