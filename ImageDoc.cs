@@ -610,7 +610,6 @@ namespace IPLab
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // ImageDoc
             // 
@@ -1846,7 +1845,7 @@ namespace IPLab
                 tempMetadataList[6] = metadataList[1];
                 tempMetadataList[7] = metadataList[2];
                 tempMetadataList[8] = metadataList[3];
-                //tempMetadataList[9] = metadataList[4];
+                tempMetadataList[9] = metadataList[4];
             }
 
             foreach (string data in tempMetadataList)
@@ -2441,6 +2440,7 @@ namespace IPLab
 
         public void UniformCropDone()
         {
+            
             cropCount += 1;
             if (cropCount == 1)
             {
@@ -2477,6 +2477,17 @@ namespace IPLab
                 WriteColorVarianceResearch(colorArray1);
                 WriteColorVarianceResearch(colorArray2);
                 WriteColorVarianceResearch(colorArray3);
+
+                // Create an instance of the dialog
+                PenColor input = new PenColor();
+                // Show the dialog modally, testing the result.
+                // If the user cancelled, skip past this block.
+                if (input.ShowDialog() == DialogResult.OK)
+                {
+                    // The user clicked OK or pressed Return Key
+                    // so display their input in this form.
+                    //get text like this  "input.comboBox1.SelectedItem.ToString();"
+                }
 
                 BluePenCalc(colorArray1[0] + colorArray2[0] + colorArray3[0], colorArray1[1] + colorArray2[1] + colorArray3[1], colorArray1[2] + colorArray2[2] + colorArray3[2]);
 
@@ -2809,6 +2820,7 @@ namespace IPLab
             resultList.Add(values[2].ToString());
             string result = getResultValue(values);
             resultList.Add(result);
+            resultList.Add(getFilePath());
             writeToMetadataFile(resultList,"che");
             
             //finally give the message
@@ -2837,6 +2849,14 @@ namespace IPLab
             }
             /*end remove after test*/
         }
+
+        private string getFilePath()
+        {
+            MainForm mainForm = this.TopLevelControl as MainForm;
+            return mainForm.getCurrentFileNme();
+        }
+
+
 
         private string getResultValue(double[] input)
         {
@@ -2916,11 +2936,7 @@ namespace IPLab
             UniformCrop();
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        
 
 
     }

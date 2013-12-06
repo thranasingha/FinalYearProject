@@ -835,6 +835,14 @@ namespace IPLab
             return retVal;
         }
 
+        public string getCurrentFileNme()
+        {
+            Content doc = dockManager.ActiveDocument;
+            // set initial file name
+            string fileName = Path.GetDirectoryName(((ImageDoc)doc).FileName) + "\\" + Path.GetFileName(((ImageDoc)doc).FileName);
+            return fileName;
+        }
+
 		#endregion
 
 		// On form closing
