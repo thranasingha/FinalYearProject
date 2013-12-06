@@ -61,7 +61,7 @@ namespace IPLab.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C:\Users\Kosala\Desktop\.
+        ///   Looks up a localized string similar to E:\.
         /// </summary>
         internal static string workingPath {
             get {

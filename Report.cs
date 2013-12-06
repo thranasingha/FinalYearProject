@@ -89,7 +89,7 @@ namespace IPLab
                 FindAndReplace(wordApp, "<Checkerboard3>", metadata[7]);
                 FindAndReplace(wordApp, "<Checkerboard4>", metadata[8]);
                 FindAndReplace(wordApp, "<result>",
-                    "Overall analysis says that the signature is " + finalPrecentage() + "% genuin.");
+                    "Overall analysis says that the signature is " + finalPrecentage() + "% fogery.");
 
                 Bitmap image = new Bitmap(metadata[9]);
                 int width, height;
