@@ -2584,6 +2584,7 @@ namespace IPLab
 
             if (blueVar < 61.72)
             {
+
                 bluePercentage = 5;
             }
             else if (blueVar > 95.6)
