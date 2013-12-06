@@ -2830,8 +2830,6 @@ namespace IPLab
                 double temp = ((float)corners.Count * 100) / (float)stat.PixelsCountWithoutBlack;
 
                 //get main form for work
-                //MainForm mainForm = this.TopLevelControl as MainForm;
-                //mainForm.saveCheckerboarddTxt(temp.ToString());
                 values[i - 1] = temp;
 
                 if (i == 2)
@@ -2850,7 +2848,7 @@ namespace IPLab
             writeToMetadataFile(resultList,"che");
             
             //finally give the message
-            MessageBox.Show("Percentage of analysed region could be a printed region is" + (100 - Double.Parse(getResultValue(values))).ToString(),
+            MessageBox.Show("Percentage of analysed region could be a printed region is : " + (100 - Double.Parse(getResultValue(values))).ToString(),
                         "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             /*remove after test
