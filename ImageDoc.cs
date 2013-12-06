@@ -2547,7 +2547,30 @@ namespace IPLab
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        
+        /// <summary>
+        /// Write dithering verification results to the final report
+        /// </summary>
+        /// <param name="dithering1"></param>
+        /// <param name="dithering2"></param>
+        /// <param name="dithering3"></param>
+        /// <param name="dithering4"></param>
+        public void WriteDitheringData(string dithering1,string dithering2,string dithering3,string dithering4) 
+        {
+            List<string> resultList = new System.Collections.Generic.List<string>();
+            resultList.Add(dithering1);
+            resultList.Add(dithering2);
+            resultList.Add(dithering3);
+            resultList.Add(dithering4);
+            writeToMetadataFile(resultList, "dit");
+        }
 
+        /// <summary>
+        /// Calculate percentage for blue pens
+        /// </summary>
+        /// <param name="totalRedVar"> Red color variation </param>
+        /// <param name="totalGreenVar"> Green color variation </param>
+        /// <param name="totalBlueVar"> Blue color variation </param>
         public void BluePenCalc(int totalRedVar, int totalGreenVar, int totalBlueVar)
         {
             double redeVar = totalRedVar / 3;
@@ -2604,6 +2627,12 @@ namespace IPLab
             WritePercentage(redPercentage, greenPercentage, bluePercentage, totalFalsePercentage);
         }
 
+        /// <summary>
+        /// Calculate percentage for black color pens
+        /// </summary>
+        /// <param name="totalRedVar"> Red color variation </param>
+        /// <param name="totalGreenVar"> Green color variation </param>
+        /// <param name="totalBlueVar"> Blue color variation </param>
         public void BlackPenCalc(int totalRedVar, int totalGreenVar, int totalBlueVar)
         {
             double redeVar = totalRedVar / 3;
@@ -2659,6 +2688,7 @@ namespace IPLab
 
             WritePercentage(redPercentage, greenPercentage, bluePercentage, totalFalsePercentage);
         }
+
 
         public void WritePercentage(double red, double green, double blue, double total)
         {
