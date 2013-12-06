@@ -34,6 +34,9 @@ namespace IPLab
 
             }
 
+            File.Copy(Properties.Resources.workingPath + @"Document Verification Results.docx",
+                Properties.Resources.workingPath + @"Template", true);
+
             //if (File.Exists(@"E:\invoice.pdf"))
             //{
             //    File.Delete(@"E:\invoice.pdf");
