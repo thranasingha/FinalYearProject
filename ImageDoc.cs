@@ -2454,9 +2454,10 @@ namespace IPLab
                 ImageStatistics stat = (image == null) ? null : new ImageStatistics(image);
 
                 Bitmap map = AForge.Imaging.Image.Clone(image);
+
+                //detect corners of the image
                 SusanCornersDetector cnrDetector = new SusanCornersDetector();
                 cnrDetector.ProcessImage(AForge.Imaging.Filters.NewGrayscale.CommonAlgorithms.BT709.Apply(map));
-                //cnrDetector.ProcessImage(map);
                 List<AForgeService.IntPoint> corners = cnrDetector.ProcessImage(image);
 
                 double temp = ((float)corners.Count * 100) / (float)stat.PixelsCountWithoutBlack;
