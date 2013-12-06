@@ -61,8 +61,6 @@ namespace IPLab
             // Check to see that file exists
             if (File.Exists((string)fileName))
             {
-                DateTime today = DateTime.Now;
-
                 object readOnly = false;
                 object isVisible = false;
                 object nothin = 1;
