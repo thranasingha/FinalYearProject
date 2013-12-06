@@ -46,14 +46,14 @@
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "Red",
-            "Green",
-            "Blue"});
+            "Blue Pen",
+            "Black Pen",
+            "Pencil",
+            "Other"});
             this.comboBox1.Location = new System.Drawing.Point(12, 12);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(171, 21);
             this.comboBox1.TabIndex = 4;
-            this.comboBox1.Text = "Select One";
             // 
             // PenColor
             // 

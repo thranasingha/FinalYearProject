@@ -14,6 +14,7 @@ namespace IPLab
         public PenColor()
         {
             InitializeComponent();
+            this.comboBox1.SelectedIndex = 0;
         }
     }
 }
