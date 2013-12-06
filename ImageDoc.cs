@@ -2480,30 +2480,10 @@ namespace IPLab
             writeToMetadataFile(resultList, "che"); //push results to the file
 
             //finally give the message
-            MessageBox.Show("Percentage of analysed region could be a printed region is : " + (100 - Double.Parse(getResultValue(values))).ToString(),
+            MessageBox.Show("Percentage of analysed region could be a printed region is : " + result,
                         "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            /*remove after test
-            try
-            {
-                string outFile = "C://Users//Tharindu//Desktop//Project//accuracy test//original.csv";
-
-                using (StreamWriter writer = File.AppendText(outFile))
-                {
-                    writer.WriteLine(result);
-                }
-
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(this, "Fail to save the text", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
-            }
-            /*end remove after test*/
+            
         }
 
         /// <summary>
@@ -2582,7 +2562,7 @@ namespace IPLab
             //combine generated result
             double result = (.4 * nonThresholdPercent + .3 * Threshold150Percent + .3 * Threshold180Percent) + 5;
             if (result > 100) { result = 100; }
-            retVal = (100 - result).ToString();
+            retVal = result.ToString();
             return retVal;
         }
 
