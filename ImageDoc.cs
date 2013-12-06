@@ -1859,9 +1859,10 @@ namespace IPLab
 
             using (StreamWriter sw = File.AppendText(Properties.Resources.workingPath + @"MetadataText.txt"))
             {
-                sw.WriteLine("This");
-                sw.WriteLine("is Extra");
-                sw.WriteLine("Text");
+                foreach (string s in tempMetadataList)
+                {
+                    sw.WriteLine(s);
+                }
             }
 
             tempMetadataList.Clear();
