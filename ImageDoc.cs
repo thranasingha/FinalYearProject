@@ -2796,49 +2796,49 @@ namespace IPLab
             double redeVar = totalRedVar / 3;
             double redPercentage = 100;
 
-            if (redeVar < 132.9)
+            if (redeVar < 33.999)
             {
-                redPercentage = 2.38;
+                redPercentage = 3;
             }
-            else if (redeVar >= 209.47)
+            else if (redeVar >= 92.46)
             {
-                redPercentage = 95;
+                redPercentage = 97;
             }
             else
             {
-                redPercentage = 2.38 + 92.62 * (redeVar - 132.9) / 76.57;
+                redPercentage = 3 + 97 * (redeVar - 33.999) / 57.461;
             }
 
             double greenVar = totalBlueVar / 3;
             double greenPercentage = 100;
 
-            if (greenVar < 133.9)
+            if (greenVar < 33.99)
             {
-                greenPercentage = 2.38;
+                greenPercentage = 3;
             }
-            else if (greenVar >= 208.4)
+            else if (greenVar >= 92.74)
             {
-                greenPercentage = 95;
+                greenPercentage = 97;
             }
             else
             {
-                greenPercentage = 2.38 + 92.62 * (greenVar - 133.9) / 74.5;
+                greenPercentage = 3 + 97 * (greenVar - 33.99) / 58.75;
             }
 
             double blueVar = totalBlueVar / 3;
             double bluePercentage = 100;
 
-            if (blueVar < 132.6)
+            if (blueVar < 33.51)
             {
-                bluePercentage = 2.38;
+                bluePercentage = 3;
             }
-            else if (blueVar > 207.45)
+            else if (blueVar > 91.74)
             {
-                bluePercentage = 95;
+                bluePercentage = 97;
             }
             else
             {
-                bluePercentage = 2.38 + 92.62 * (blueVar - 132.6) / 74.85;
+                bluePercentage = 3 + 97 * (blueVar - 33.51) / 58.23;
             }
 
             double totalFalsePercentage = Math.Max(redPercentage, greenPercentage);
