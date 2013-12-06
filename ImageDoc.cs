@@ -2427,7 +2427,166 @@ namespace IPLab
             }
         }
 
+        /// <summary>
+        /// Save the item to the checkerboard result file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void checkerboardMenu_Click(object sender, EventArgs e)
+        {
+            Bitmap tempImage = AForge.Imaging.Image.Clone(image);
+            double[] values = new double[3];
+            for (int i = 1; i <= 3; i++)
+            {
+                if (i == 2)
+                {
+                    MessageBox.Show("Please select a value arround 150",
+                        "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (i == 3)
+                {
+                    MessageBox.Show("Please select a value arround 180.",
+                    "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                Cursor.Current = Cursors.WaitCursor;
+                if (i > 1)
+                {
+                    thresholdingSegment_Click(new object(), new EventArgs());
+                }
+                ImageStatistics stat = (image == null) ? null : new ImageStatistics(image);
 
+                Bitmap map = AForge.Imaging.Image.Clone(image);
+                SusanCornersDetector cnrDetector = new SusanCornersDetector();
+                cnrDetector.ProcessImage(AForge.Imaging.Filters.NewGrayscale.CommonAlgorithms.BT709.Apply(map));
+                //cnrDetector.ProcessImage(map);
+                List<AForgeService.IntPoint> corners = cnrDetector.ProcessImage(image);
+
+                double temp = ((float)corners.Count * 100) / (float)stat.PixelsCountWithoutBlack;
+
+                //get main form for work
+                values[i - 1] = temp;
+
+                if (i == 2)
+                {
+                    image = tempImage;
+                }
+            }
+
+            List<string> resultList = new System.Collections.Generic.List<string>();
+            resultList.Add(values[0].ToString());
+            resultList.Add(values[1].ToString());
+            resultList.Add(values[2].ToString());
+            string result = getResultValue(values);
+            resultList.Add(result);
+            resultList.Add(getFilePath());
+            writeToMetadataFile(resultList, "che"); //push results to the file
+
+            //finally give the message
+            MessageBox.Show("Percentage of analysed region could be a printed region is : " + (100 - Double.Parse(getResultValue(values))).ToString(),
+                        "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            /*remove after test
+            try
+            {
+                string outFile = "C://Users//Tharindu//Desktop//Project//accuracy test//original.csv";
+
+                using (StreamWriter writer = File.AppendText(outFile))
+                {
+                    writer.WriteLine(result);
+                }
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "Fail to save the text", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+            /*end remove after test*/
+        }
+
+        /// <summary>
+        /// get file path from main form
+        /// </summary>
+        /// <returns></returns>
+        private string getFilePath()
+        {
+            MainForm mainForm = this.TopLevelControl as MainForm;
+            return mainForm.getCurrentFileNme();
+        }
+
+
+        /// <summary>
+        /// get results to checkerboard
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private string getResultValue(double[] input)
+        {
+            string retVal = string.Empty;
+            double nonThresholdPercent;
+            double Threshold150Percent;
+            double Threshold180Percent;
+
+            //for non threshold value
+            if (input[0] > 5)
+            {
+                nonThresholdPercent = 5;
+            }
+            else if (input[1] > 2.5)
+            {
+                nonThresholdPercent = 5 + 20 * ((input[1] - 2.5) / 2.5);
+            }
+            else if (input[1] > 0.88)
+            {
+                nonThresholdPercent = 15 + 30 * ((input[1] - 0.88) / 1.62);
+            }
+            else if (input[1] > 0.6)
+            {
+                nonThresholdPercent = 45 + 35 * (input[0] - 0.5);
+            }
+            else
+            {
+                nonThresholdPercent = 80;
+            }
+
+            //for 150 threshold
+            if (input[1] > 0 && input[1] < 3.5)
+            {
+                Threshold150Percent = 40 * ((input[1] - 0) / 4);
+            }
+            else if (input[1] < 7)
+            {
+                Threshold150Percent = 40 + 40 * ((input[1] - 3.5) / 3.5);
+            }
+            else
+            {
+                Threshold150Percent = 80;
+            }
+
+            //for 180 threshold
+            if (input[2] < 4.3)
+            {
+                Threshold180Percent = 10;
+            }
+            else if (input[2] < 6.16)
+            {
+                Threshold180Percent = 10 + 70 * ((input[2] - 4.3) / 1.86);
+            }
+            else
+            {
+                Threshold180Percent = 80;
+            }
+
+            //combine generated result
+            double result = (.4 * nonThresholdPercent + .3 * Threshold150Percent + .3 * Threshold180Percent) + 5;
+            if (result > 100) { result = 100; }
+            retVal = (100 - result).ToString();
+            return retVal;
+        }
 
 
         #endregion
@@ -2811,158 +2970,7 @@ namespace IPLab
         }
 
 
-        /// <summary>
-        /// Save the item to the checkerboard result file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void checkerboardMenu_Click(object sender, EventArgs e)
-        {
-            Bitmap tempImage = AForge.Imaging.Image.Clone(image);
-            double[] values = new double[3];
-            for (int i = 1; i <= 3; i++)
-            {
-                if (i == 2)
-                {
-                    MessageBox.Show("Please select a value arround 150",
-                        "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (i == 3)
-                {
-                    MessageBox.Show("Please select a value arround 180.",
-                    "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                Cursor.Current = Cursors.WaitCursor;
-                if (i > 1)
-                {
-                    thresholdingSegment_Click(new object(), new EventArgs());
-                }
-                ImageStatistics stat = (image == null) ? null : new ImageStatistics(image);
-
-                Bitmap map = AForge.Imaging.Image.Clone(image);
-                SusanCornersDetector cnrDetector = new SusanCornersDetector();
-                cnrDetector.ProcessImage(AForge.Imaging.Filters.NewGrayscale.CommonAlgorithms.BT709.Apply(map));
-                //cnrDetector.ProcessImage(map);
-                List<AForgeService.IntPoint> corners = cnrDetector.ProcessImage(image);
-
-                double temp = ((float)corners.Count * 100) / (float)stat.PixelsCountWithoutBlack;
-
-                //get main form for work
-                values[i - 1] = temp;
-
-                if (i == 2)
-                {
-                    image = tempImage;
-                }
-            }
-
-            List<string> resultList = new System.Collections.Generic.List<string>();
-            resultList.Add(values[0].ToString());
-            resultList.Add(values[1].ToString());
-            resultList.Add(values[2].ToString());
-            string result = getResultValue(values);
-            resultList.Add(result);
-            resultList.Add(getFilePath());
-            writeToMetadataFile(resultList,"che");
-            
-            //finally give the message
-            MessageBox.Show("Percentage of analysed region could be a printed region is : " + (100 - Double.Parse(getResultValue(values))).ToString(),
-                        "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            /*remove after test
-            try
-            {
-                string outFile = "C://Users//Tharindu//Desktop//Project//accuracy test//original.csv";
-
-                using (StreamWriter writer = File.AppendText(outFile))
-                {
-                    writer.WriteLine(result);
-                }
-
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(this, "Fail to save the text", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
-            }
-            /*end remove after test*/
-        }
-
-        private string getFilePath()
-        {
-            MainForm mainForm = this.TopLevelControl as MainForm;
-            return mainForm.getCurrentFileNme();
-        }
-
-
-
-        private string getResultValue(double[] input)
-        {
-            string retVal = string.Empty;
-            double nonThresholdPercent;
-            double Threshold150Percent;
-            double Threshold180Percent;
-
-            //for non threshold value
-            if (input[0] > 5)
-            {
-                nonThresholdPercent = 5;
-            }
-            else if (input[1] > 2.5)
-            {
-                nonThresholdPercent = 5 + 20 * ((input[1] - 2.5) / 2.5);
-            }
-            else if (input[1] > 0.88)
-            {
-                nonThresholdPercent = 15 + 30 * ((input[1] - 0.88) / 1.62);
-            }
-            else if (input[1] > 0.6)
-            {
-                nonThresholdPercent = 45 + 35 * (input[0] - 0.5);
-            }
-            else
-            {
-                nonThresholdPercent = 80;
-            }
-
-            //for 150 threshold
-            if (input[1] > 0 && input[1] < 3.5)
-            {
-                Threshold150Percent = 40 * ((input[1] - 0) / 4);
-            }
-            else if (input[1] < 7)
-            {
-                Threshold150Percent = 40 + 40 * ((input[1] - 3.5) / 3.5);
-            }
-            else
-            {
-                Threshold150Percent = 80;
-            }
-
-            //for 180 threshold
-            if (input[2] < 4.3)
-            {
-                Threshold180Percent = 10;
-            }
-            else if (input[2] < 6.16)
-            {
-                Threshold180Percent = 10 + 70 * ((input[2] - 4.3) / 1.86);
-            }
-            else
-            {
-                Threshold180Percent = 80;
-            }
-
-            //combine generated result
-            double result = (.4 * nonThresholdPercent + .3 * Threshold150Percent + .3 * Threshold180Percent) + 5;
-            if (result > 100) { result = 100; }
-            retVal = (100 - result).ToString();
-            return retVal;
-        }
+        
 
         
         private void ditheringMenu_Click(object sender, EventArgs e)
