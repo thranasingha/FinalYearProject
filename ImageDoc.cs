@@ -2491,6 +2491,7 @@ namespace IPLab
                 int greenColorVar = colorArray1[1] + colorArray2[1] + colorArray3[1];
                 int blueColorVar = colorArray1[2] + colorArray2[2] + colorArray3[2];
 
+
                 string[] dithPercentage = new string[2];
                 dithPercentage = BluePenCalc(redColorVar, greenColorVar, blueColorVar);
 
