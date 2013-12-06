@@ -2474,18 +2474,30 @@ namespace IPLab
                 WriteColorVarianceResearch(colorArray2);
                 WriteColorVarianceResearch(colorArray3);
 
-                // Create an instance of the dialog
-                PenColor input = new PenColor();
-                // Show the dialog modally, testing the result.
-                // If the user cancelled, skip past this block.
-                if (input.ShowDialog() == DialogResult.OK)
-                {
-                    // The user clicked OK or pressed Return Key
-                    // so display their input in this form.
-                    //get text like this  "input.comboBox1.SelectedItem.ToString();"
-                }
+                //// Create an instance of the dialog
+                //PenColor input = new PenColor();
+                //// Show the dialog modally, testing the result.
+                //// If the user cancelled, skip past this block.
+                //if (input.ShowDialog() == DialogResult.OK)
+                //{
+                //    // The user clicked OK or pressed Return Key
+                //    // so display their input in this form.
+                //    //get text like this  "input.comboBox1.SelectedItem.ToString();"
+                //}
 
-                BluePenCalc(colorArray1[0] + colorArray2[0] + colorArray3[0], colorArray1[1] + colorArray2[1] + colorArray3[1], colorArray1[2] + colorArray2[2] + colorArray3[2]);
+
+                //BluePenCalc(colorArray1[0] + colorArray2[0] + colorArray3[0], colorArray1[1] + colorArray2[1] + colorArray3[1], colorArray1[2] + colorArray2[2] + colorArray3[2]);
+                int redColorVar = colorArray1[0] + colorArray2[0] + colorArray3[0];
+                int greenColorVar = colorArray1[1] + colorArray2[1] + colorArray3[1];
+                int blueColorVar = colorArray1[2] + colorArray2[2] + colorArray3[2];
+
+                string[] dithPercentage = new string[2];
+                dithPercentage = BluePenCalc(redColorVar, greenColorVar, blueColorVar);
+
+                string dithering1 = "Blue Color Pen";
+                string dithering2 = "Red Color Variacne: " + redColorVar.ToString() + ", Green Color Variacne: " + greenColorVar + ", Blue Color Variacne: " + blueColorVar;
+
+                WriteDitheringData(dithering1, dithering2, dithPercentage[0], dithPercentage[1]);
 
                 this.image.Dispose();
                 this.image = (Bitmap)ditheringImage.Clone();
@@ -2567,7 +2579,7 @@ namespace IPLab
         /// <param name="totalRedVar"> Red color variation </param>
         /// <param name="totalGreenVar"> Green color variation </param>
         /// <param name="totalBlueVar"> Blue color variation </param>
-        public void BluePenCalc(int totalRedVar, int totalGreenVar, int totalBlueVar)
+        public string[] BluePenCalc(int totalRedVar, int totalGreenVar, int totalBlueVar)
         {
             double redeVar = totalRedVar / 3;
             double redPercentage = 100;
@@ -2620,7 +2632,12 @@ namespace IPLab
             double totalFalsePercentage = Math.Max(redPercentage,greenPercentage);
             totalFalsePercentage = Math.Max(totalFalsePercentage, bluePercentage);
 
+            string[] ditheringPercentage = new string[2];
+            ditheringPercentage[0] = "Suspect Percentages - Red Color: " + redPercentage.ToString() + ", Green Color: " + greenPercentage.ToString() + ", Blue Color: " + bluePercentage.ToString() ;
+            ditheringPercentage[1] = totalFalsePercentage.ToString();
             WritePercentage(redPercentage, greenPercentage, bluePercentage, totalFalsePercentage);
+
+            return ditheringPercentage;
         }
 
         /// <summary>
