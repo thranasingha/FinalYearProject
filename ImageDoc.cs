@@ -86,14 +86,13 @@ namespace IPLab
         private System.Windows.Forms.MenuItem cannyEdgeFiltersItem;
         private MenuItem FilterItem;
         private MenuItem thresholdingSegment;
-        private MenuItem edgeSegment;
 
         private System.ComponentModel.IContainer components;
 
         #endregion
-        private MenuItem menuItem1;
-        private MenuItem menuItem2;
-        private MenuItem menuItem4;
+        private MenuItem lineVarienceMenu;
+        private MenuItem drowLineMenu;
+        private MenuItem analyseMenu;
         private MenuItem resxultsMenu;
         private MenuItem csvResult;
 
@@ -255,12 +254,11 @@ namespace IPLab
             this.rotateFiltersItem = new System.Windows.Forms.MenuItem();
             this.FilterItem = new System.Windows.Forms.MenuItem();
             this.thresholdingSegment = new System.Windows.Forms.MenuItem();
-            this.edgeSegment = new System.Windows.Forms.MenuItem();
             this.resxultsMenu = new System.Windows.Forms.MenuItem();
             this.csvResult = new System.Windows.Forms.MenuItem();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.lineVarienceMenu = new System.Windows.Forms.MenuItem();
+            this.drowLineMenu = new System.Windows.Forms.MenuItem();
+            this.analyseMenu = new System.Windows.Forms.MenuItem();
             this.verificationMenu = new System.Windows.Forms.MenuItem();
             this.checkerboardMenu = new System.Windows.Forms.MenuItem();
             this.ditheringMenu = new System.Windows.Forms.MenuItem();
@@ -276,7 +274,7 @@ namespace IPLab
             this.filtersItem,
             this.FilterItem,
             this.resxultsMenu,
-            this.menuItem1,
+            this.lineVarienceMenu,
             this.verificationMenu});
             // 
             // imageItem
@@ -528,8 +526,7 @@ namespace IPLab
             // 
             this.FilterItem.Index = 2;
             this.FilterItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.thresholdingSegment,
-            this.edgeSegment});
+            this.thresholdingSegment});
             this.FilterItem.MergeOrder = 1;
             this.FilterItem.Text = "Segment";
             // 
@@ -538,12 +535,6 @@ namespace IPLab
             this.thresholdingSegment.Index = 0;
             this.thresholdingSegment.Text = "By Thresholding";
             this.thresholdingSegment.Click += new System.EventHandler(this.thresholdingSegment_Click);
-            // 
-            // edgeSegment
-            // 
-            this.edgeSegment.Index = 1;
-            this.edgeSegment.Text = "By Edges";
-            this.edgeSegment.Click += new System.EventHandler(this.edgeSegment_Click);
             // 
             // resxultsMenu
             // 
@@ -559,25 +550,26 @@ namespace IPLab
             this.csvResult.Text = "Generate PDF";
             this.csvResult.Click += new System.EventHandler(this.susanCometItem_Click);
             // 
-            // menuItem1
+            // lineVarienceMenu
             // 
-            this.menuItem1.Index = 4;
-            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem2,
-            this.menuItem4});
-            this.menuItem1.Text = "Line Variance Analysis";
+            this.lineVarienceMenu.Index = 4;
+            this.lineVarienceMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.drowLineMenu,
+            this.analyseMenu});
+            this.lineVarienceMenu.MergeOrder = 3;
+            this.lineVarienceMenu.Text = "Line Variance Analysis";
             // 
-            // menuItem2
+            // drowLineMenu
             // 
-            this.menuItem2.Index = 0;
-            this.menuItem2.Text = "Draw Line";
-            this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+            this.drowLineMenu.Index = 0;
+            this.drowLineMenu.Text = "Draw Line";
+            this.drowLineMenu.Click += new System.EventHandler(this.menuItem2_Click);
             // 
-            // menuItem4
+            // analyseMenu
             // 
-            this.menuItem4.Index = 1;
-            this.menuItem4.Text = "Analyze";
-            this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
+            this.analyseMenu.Index = 1;
+            this.analyseMenu.Text = "Analyze";
+            this.analyseMenu.Click += new System.EventHandler(this.menuItem4_Click);
             // 
             // verificationMenu
             // 
@@ -624,7 +616,7 @@ namespace IPLab
             // 
             this.AllowedStates = WeifenLuo.WinFormsUI.ContentStates.Document;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(528, 237);
+            this.ClientSize = new System.Drawing.Size(528, 217);
             this.Controls.Add(this.pictureBox1);
             this.Menu = this.mainMenu;
             this.Name = "ImageDoc";

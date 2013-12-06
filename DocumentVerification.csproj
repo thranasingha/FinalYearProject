@@ -159,6 +159,12 @@
     <Compile Include="Filters Forms\ThresholdForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PenColor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PenColor.Designer.cs">
+      <DependentUpon>PenColor.cs</DependentUpon>
+    </Compile>
     <Compile Include="FourierDoc.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -244,6 +250,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Filters Forms\ThresholdForm.resx">
       <DependentUpon>ThresholdForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PenColor.resx">
+      <DependentUpon>PenColor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FourierDoc.resx">
       <DependentUpon>FourierDoc.cs</DependentUpon>
