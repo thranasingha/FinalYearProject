@@ -602,7 +602,7 @@ namespace IPLab
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = global::IPLab.Properties.Resources._477;
+            //this.pictureBox1.Image = global::IPLab.Properties.Resources._477;
             this.pictureBox1.Location = new System.Drawing.Point(138, 33);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(220, 225);
