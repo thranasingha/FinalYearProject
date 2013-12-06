@@ -12,6 +12,7 @@ using WeifenLuo.WinFormsUI;
 using rpaulo.toolbar;
 using AForge.Imaging;
 using System.Text;
+using System.Resources;
 
 namespace IPLab
 {
@@ -131,6 +132,44 @@ namespace IPLab
 
 			histogramWin.VisibleChanged += new EventHandler( histogram_VisibleChanged );
 			statisticsWin.VisibleChanged += new EventHandler( statistics_VisibleChanged );
+
+            String wpath = Properties.Resources.workingPath;
+            if (wpath.Equals("E:\\"))
+            {
+
+                MessageBoxButtons button = MessageBoxButtons.OKCancel;
+                string caption = "Change Path";
+                String messageBoxText = "Please select a working directory except in C drive";
+                //MessageBoxImage icon = MessageBoxImage.Warning;
+
+                //MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button);
+                String res = MessageBox.Show(messageBoxText, caption, button).ToString();
+                if (res.Equals("OK"))
+                {
+
+                    FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
+
+                    folderBrowserDialog1.ShowDialog();
+                    String folderPath = folderBrowserDialog1.SelectedPath;
+
+
+
+                    String str_directory = Environment.CurrentDirectory.ToString();
+                    String parentDir = Directory.GetParent(Directory.GetParent(str_directory).ToString()).ToString();
+
+                    String resFileName = @parentDir + "\\Properties\\Resources.resx";
+
+
+
+                    ResXResourceWriter writer = new ResXResourceWriter(resFileName);
+
+                    writer.AddResource("workingPath", folderPath);
+
+                    writer.Generate();
+                    writer.Close();
+
+                }
+            }
 		}
 
 		/// <summary>
@@ -688,7 +727,10 @@ namespace IPLab
 		[STAThread]
 		static void Main() 
 		{
+            
 			Application.Run(new MainForm());
+
+            
 		}
 
 		#region IDocumentsHost implementation
