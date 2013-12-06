@@ -2453,7 +2453,7 @@ namespace IPLab
             if (cropCount == 1)
             {
                 colorArray1 = GetColorVariation();
-                WriteColorVariance(colorArray1);
+                //WriteColorVarianceResearch(colorArray1);
                 this.image.Dispose();
                 this.image = (Bitmap)ditheringImage.Clone();
                 UpdateNewImage();
@@ -2467,7 +2467,7 @@ namespace IPLab
             else if (cropCount == 2)
             {
                 colorArray2 = GetColorVariation();
-                WriteColorVariance(colorArray2);
+                //WriteColorVarianceResearch(colorArray2);
                 this.image.Dispose();
                 this.image = (Bitmap)ditheringImage.Clone();
                 UpdateNewImage();
@@ -2481,7 +2481,13 @@ namespace IPLab
             else if (cropCount == 3)
             {
                 colorArray3 = GetColorVariation();
-                WriteColorVariance(colorArray3);
+
+                WriteColorVarianceResearch(colorArray1);
+                WriteColorVarianceResearch(colorArray2);
+                WriteColorVarianceResearch(colorArray3);
+
+                BluePenCalc(colorArray1[0] + colorArray2[0] + colorArray3[0], colorArray1[1] + colorArray2[1] + colorArray3[1], colorArray1[2] + colorArray2[2] + colorArray3[2]);
+
                 this.image.Dispose();
                 this.image = (Bitmap)ditheringImage.Clone();
                 UpdateNewImage();
@@ -2507,6 +2513,166 @@ namespace IPLab
 
             MainForm mainForm = this.TopLevelControl as MainForm;
             mainForm.saveDitheringTxt(output);
+        }
+
+        public void WriteColorVarianceResearch(int[] pixelArray)
+        {
+            try
+            {
+                string fileName = "A:\\Red.txt";
+                using (System.IO.StreamWriter txtWriter = new System.IO.StreamWriter(@fileName, true))
+                {
+                    txtWriter.WriteLine(pixelArray[0].ToString());
+                }
+
+                fileName = "A:\\Green.txt";
+                using (System.IO.StreamWriter txtWriter = new System.IO.StreamWriter(@fileName, true))
+                {
+                    txtWriter.WriteLine(pixelArray[1].ToString());
+                }
+
+                fileName = "A:\\Blue.txt";
+                using (System.IO.StreamWriter txtWriter = new System.IO.StreamWriter(@fileName, true))
+                {
+                    txtWriter.WriteLine(pixelArray[2].ToString());
+                }
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "Fail to save the text", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void BluePenCalc(int totalRedVar, int totalGreenVar, int totalBlueVar)
+        {
+            double redeVar = totalRedVar / 3;
+            double redPercentage = 100;
+
+            if (redeVar < 76.23)
+            {
+                redPercentage = 8.33;
+            }
+            else if (redeVar >= 121.08)
+            {
+                redPercentage = 95;
+            }
+            else 
+            {
+                redPercentage = 8.33 + 86.67 * (redeVar - 76.23) / 44.85;
+            }
+
+            double greenVar = totalBlueVar / 3;
+            double greenPercentage = 100;
+
+            if (greenVar < 50.18)
+            {
+                greenPercentage = 6.67;
+            }
+            else if (greenVar >= 97.09)
+            {
+                greenPercentage = 98.33;
+            }
+            else
+            {
+                greenPercentage = 6.67 + 88.33 * (greenVar - 50.18) / 46.91;
+            }
+
+            double blueVar = totalBlueVar / 3;
+            double bluePercentage = 100;
+
+            if (blueVar < 61.72)
+            {
+                bluePercentage = 5;
+            }
+            else if (blueVar > 95.6)
+            {
+                bluePercentage = 93.33;
+            }
+            else
+            {
+                bluePercentage = 5 + 90 * (blueVar - 61.72) / 33.88;
+            }
+
+            double totalFalsePercentage = Math.Max(redPercentage,greenPercentage);
+            totalFalsePercentage = Math.Max(totalFalsePercentage, bluePercentage);
+
+            WritePercentage(redPercentage, greenPercentage, bluePercentage, totalFalsePercentage);
+        }
+
+        public void BlackPenCalc(int totalRedVar, int totalGreenVar, int totalBlueVar)
+        {
+            double redeVar = totalRedVar / 3;
+            double redPercentage = 100;
+
+            if (redeVar < 132.9)
+            {
+                redPercentage = 2.38;
+            }
+            else if (redeVar >= 209.47)
+            {
+                redPercentage = 95;
+            }
+            else
+            {
+                redPercentage = 2.38 + 92.62 * (redeVar - 132.9) / 76.57;
+            }
+
+            double greenVar = totalBlueVar / 3;
+            double greenPercentage = 100;
+
+            if (greenVar < 133.9)
+            {
+                greenPercentage = 2.38;
+            }
+            else if (greenVar >= 208.4)
+            {
+                greenPercentage = 95;
+            }
+            else
+            {
+                greenPercentage = 2.38 + 92.62 * (greenVar - 133.9) / 74.5;
+            }
+
+            double blueVar = totalBlueVar / 3;
+            double bluePercentage = 100;
+
+            if (blueVar < 132.6)
+            {
+                bluePercentage = 2.38;
+            }
+            else if (blueVar > 207.45)
+            {
+                bluePercentage = 95;
+            }
+            else
+            {
+                bluePercentage = 2.38 + 92.62 * (blueVar - 132.6) / 74.85;
+            }
+
+            double totalFalsePercentage = Math.Max(redPercentage, greenPercentage);
+            totalFalsePercentage = Math.Max(totalFalsePercentage, bluePercentage);
+
+            WritePercentage(redPercentage, greenPercentage, bluePercentage, totalFalsePercentage);
+        }
+
+        public void WritePercentage(double red, double green, double blue, double total)
+        {
+            try
+            {
+                string fileName = "A:\\Percentage.txt";
+                using (System.IO.StreamWriter txtWriter = new System.IO.StreamWriter(@fileName, true))
+                {
+                    txtWriter.WriteLine(total);
+                }
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "Fail to save the text", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public void UniformCropCancel()
