@@ -1046,7 +1046,7 @@ namespace IPLab
 		}
 
 		// Reload file
-		private void reloadFileItem_Click(object sender, System.EventArgs e)
+		public void reloadFileItem_Click(object sender, System.EventArgs e)
 		{
 			Content	doc = dockManager.ActiveDocument;
 

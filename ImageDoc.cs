@@ -2490,6 +2490,8 @@ namespace IPLab
             MessageBox.Show("Percentage of analysed region could be a printed region is : " + result,
                         "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            MainForm mainForm = this.TopLevelControl as MainForm;
+            mainForm.reloadFileItem_Click(new object(), new EventArgs());
             
         }
 
@@ -2966,6 +2968,8 @@ namespace IPLab
         private void menuItem4_Click(object sender, EventArgs e)
         {
             getVariationofDepth();
+            MainForm mainForm = this.TopLevelControl as MainForm;
+            mainForm.reloadFileItem_Click(new object(), new EventArgs());
         }
 
         private void menuItem9_Click(object sender, EventArgs e)
