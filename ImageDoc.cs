@@ -1804,16 +1804,21 @@ namespace IPLab
         private void makeOutput(double varience)
         {
             double precentage = ((15 - varience) / 14) * 100;
+            precentage = 100 - precentage;
             if (precentage < 0)
             {
                 precentage = 0;
+            }
+            if (precentage > 100)
+            {
+                precentage = 100;
             }
             MainForm mainForm = this.TopLevelControl as MainForm;
             mainForm.saveEdgeverienceTxt("According to the analysis this signature is " + precentage + "% genuin.");
             List<string> metadataList= new List<string>();
             metadataList.Add(precentage.ToString());
             writeToMetadataFile(metadataList, "edg");
-            MessageBox.Show(this, "According to the analysis this signature is " + (100 - precentage) + "% forged.");
+            MessageBox.Show(this, "According to the analysis this signature is " + precentage + "% forged.");
         }
 
         /// <summary>
