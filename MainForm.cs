@@ -96,30 +96,30 @@ namespace IPLab
         private ToolBarButton cropcancel;
 		private System.ComponentModel.IContainer components;
 
-		public MainForm()
-		{
-			//
-			// Required for Windows Form Designer support
-			//
-			InitializeComponent();
+        public MainForm()
+        {
+            //
+            // Required for Windows Form Designer support
+            //
+            InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
-			toolBarManager = new ToolBarManager(this, this);
+            //
+            // TODO: Add any constructor code after InitializeComponent call
+            //
+            toolBarManager = new ToolBarManager(this, this);
 
-			// add toolbars
-			ToolBarDockHolder holder;
+            // add toolbars
+            ToolBarDockHolder holder;
 
-			// main tool bar
-			mainToolBar.Text = "Main Tool Bar";
-			holder = toolBarManager.AddControl(mainToolBar);
-			holder.AllowedBorders = AllowedBorders.Top | AllowedBorders.Left | AllowedBorders.Right;
+            // main tool bar
+            mainToolBar.Text = "Main Tool Bar";
+            holder = toolBarManager.AddControl(mainToolBar);
+            holder.AllowedBorders = AllowedBorders.Top | AllowedBorders.Left | AllowedBorders.Right;
 
-			// image toolbar
-			imageToolBar.Text = "Image Tool Bar";
-			holder = toolBarManager.AddControl(imageToolBar);
-			holder.AllowedBorders = AllowedBorders.Top | AllowedBorders.Left | AllowedBorders.Right;
+            // image toolbar
+            imageToolBar.Text = "Image Tool Bar";
+            holder = toolBarManager.AddControl(imageToolBar);
+            holder.AllowedBorders = AllowedBorders.Top | AllowedBorders.Left | AllowedBorders.Right;
 
             // uniform crop toolbar
             uniformCropToolbar.Text = "Uniform Crop Tool Bar";
@@ -127,11 +127,11 @@ namespace IPLab
             holder = toolBarManager.AddControl(uniformCropToolbar);
             holder.AllowedBorders = AllowedBorders.Top | AllowedBorders.Left | AllowedBorders.Right;
 
-			histogramWin.DockStateChanged += new EventHandler(histogram_DockStateChanged);
-			statisticsWin.DockStateChanged += new EventHandler(statistics_DockStateChanged);
+            histogramWin.DockStateChanged += new EventHandler(histogram_DockStateChanged);
+            statisticsWin.DockStateChanged += new EventHandler(statistics_DockStateChanged);
 
-			histogramWin.VisibleChanged += new EventHandler( histogram_VisibleChanged );
-			statisticsWin.VisibleChanged += new EventHandler( statistics_VisibleChanged );
+            histogramWin.VisibleChanged += new EventHandler(histogram_VisibleChanged);
+            statisticsWin.VisibleChanged += new EventHandler(statistics_VisibleChanged);
 
             String wpath = Properties.Resources.workingPath;
             if (wpath.Equals("E:\\"))
@@ -144,33 +144,9 @@ namespace IPLab
 
                 //MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button);
                 String res = MessageBox.Show(messageBoxText, caption, button).ToString();
-                if (res.Equals("OK"))
-                {
 
-                    FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
-
-                    folderBrowserDialog1.ShowDialog();
-                    String folderPath = folderBrowserDialog1.SelectedPath;
-
-
-
-                    String str_directory = Environment.CurrentDirectory.ToString();
-                    String parentDir = Directory.GetParent(Directory.GetParent(str_directory).ToString()).ToString();
-
-                    String resFileName = @parentDir + "\\Properties\\Resources.resx";
-
-
-
-                    ResXResourceWriter writer = new ResXResourceWriter(resFileName);
-
-                    writer.AddResource("workingPath", folderPath);
-
-                    writer.Generate();
-                    writer.Close();
-
-                }
             }
-		}
+        }
 
 		/// <summary>
 		/// Clean up any resources being used.
