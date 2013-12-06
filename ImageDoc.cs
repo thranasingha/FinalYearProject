@@ -2624,6 +2624,9 @@ namespace IPLab
                 PenColor input = new PenColor();
                 // Show the dialog modally, testing the result.
                 // If the user cancelled, skip past this block.
+
+                string[] dithPercentage = new string[2];
+
                 if (input.ShowDialog() == DialogResult.OK)
                 {
                     string penType = input.comboBox1.SelectedItem.ToString();
@@ -2632,7 +2635,7 @@ namespace IPLab
                     int greenColorVar = (colorArray1[1] + colorArray2[1] + colorArray3[1]) / 3;
                     int blueColorVar = (colorArray1[2] + colorArray2[2] + colorArray3[2]) / 3;
 
-                    string[] dithPercentage = new string[2];
+                    
 
                     if (penType.Equals("Black Pen") )
                     {
@@ -2668,7 +2671,7 @@ namespace IPLab
                 this.image = (Bitmap)ditheringImage.Clone();
                 UpdateNewImage();
 
-                MessageBox.Show("Color variations calculated successfully.",
+                MessageBox.Show("Color variations calculated successfully. Variation percentage: " + dithPercentage[1].ToString(),
                     "Signature Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cropCount = 0;
 
