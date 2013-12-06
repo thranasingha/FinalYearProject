@@ -2940,11 +2940,8 @@ namespace IPLab
             }
 
             //combine generated result
-            double result = (.4 * nonThresholdPercent + .3 * Threshold150Percent + .3 * Threshold180Percent) + 20;
-            if(result > 95)
-            {
-                result = 95;
-            }
+            double result = (.4 * nonThresholdPercent + .3 * Threshold150Percent + .3 * Threshold180Percent) ;
+            
             retVal = (100 - result).ToString();
             return retVal;
         }
