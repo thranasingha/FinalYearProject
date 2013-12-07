@@ -100,15 +100,6 @@ namespace IPLab
                 aDoc.Shapes.AddPicture(metadata[9], ref missing, ref missing,
                     ref missing, 100, width, height, ref missing);
 
-                //worker.ReportProgress(60);
-
-
-
-                //Example of writing to the start of a document.
-                //aDoc.Content.InsertBefore("This is at the beginning\r\n\r\n" + invoiceNo);
-
-                //Example of writing to the end of a document.
-                //aDoc.Content.InsertAfter("\r\n\r\nThis is at the end" + retailerCode);
             }
             else
             {
@@ -130,7 +121,6 @@ namespace IPLab
             //Close the document - you have to do this.
             aDoc.Close(ref missing, ref missing, ref missing);
 
-            //worker.ReportProgress(95);
 
             System.Diagnostics.Process.Start(Properties.Resources.workingPath + @"Final_Result-" + Path.GetFileName(metadata[9]) + ".pdf");
 
